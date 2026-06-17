@@ -1,5 +1,9 @@
 # Trabajo Práctico Integrador
 
+<img src="./Imagenes/utn frc logo.png" alt="Logo UTN FRC" />
+
+<br />
+
 **Materia:** BackEnd de Aplicaciones <br />
 **Curso:**  <br />
 **Integrantes:**  <br />
