@@ -34,8 +34,7 @@ Pesos Argentinos. Aquí pueden utilizar la solución que consideren más conveni
 ### 2 Especificaciones del Motor de Emparejamiento de Órdenes
 
 1. Como ya se mencionó, el resultado se asume inmediato (la orden de compra se aceptó y se actualizaron todos los saldos y portfolios, o se rechazó). Pero, nuevamente, si un grupo quiere hacer la gestión de estados de la orden y que la misma se resuelva en un momento posterior, lo puede hacer sin problemas.
-2. No pueden comprarse acciones que no estén a la venta. Deben respetarse las cantidades y los montos límite. Si el usuario A quiere comprar NVDA a AR$ 30.000 y el usuario B tiene para vender pero acepta mínimo AR$ 35.000, no se puede hacer la transacción entre esas dos órdenes. Desde
-luego, la recomendación es que cuando creen la base de datos, generen portfolios que ya tengan acciones para poder realizar compras y ventas.
+2. No pueden comprarse acciones que no estén a la venta. Deben respetarse las cantidades y los montos límite. Si el usuario A quiere comprar NVDA a AR$ 30.000 y el usuario B tiene para vender pero acepta mínimo AR$ 35.000, no se puede hacer la transacción entre esas dos órdenes. Desde luego, la recomendación es que cuando creen la base de datos, generen portfolios que ya tengan acciones para poder realizar compras y ventas.
 3. Si se ingresa una orden de compra por 40 acciones y hay una orden de venta por 50 acciones. La operación se puede realizar y debe actualizarse la orden de venta para que refleje que todavía puede vender 10 acciones.
 
 ### 3. Requerimientos Funcionales

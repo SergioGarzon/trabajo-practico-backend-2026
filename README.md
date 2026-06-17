@@ -1,6 +1,6 @@
 # Trabajo Práctico Integrador
 
-<img src="./recursos/utn frc logo.png" alt="Logo UTN FRC" />
+<img src="./recursos/Images/utn frc logo.png" alt="Logo UTN FRC" />
 
 <br />
 
