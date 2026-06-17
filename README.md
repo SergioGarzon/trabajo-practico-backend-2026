@@ -10,4 +10,4 @@
 **Docente:**  <br />
 **Fecha de entrega:** 24 de Junio del 2026 <br />
 
-**Consigna:** <a href="./README.md">Link</a>
+**Consigna:** <a href="./consigna/">Link</a>
