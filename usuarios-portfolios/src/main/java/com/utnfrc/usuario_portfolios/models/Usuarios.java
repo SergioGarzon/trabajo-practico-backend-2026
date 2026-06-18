@@ -2,6 +2,7 @@ package com.utnfrc.usuario_portfolios.models;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "usuarios")
@@ -16,6 +17,7 @@ public class Usuarios implements Serializable {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "billetera_id", referencedColumnName = "id")
+    @JsonManagedReference
     private BilleteraVirtual billeteraVirtual;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,8 +1,8 @@
 package com.utnfrc.usuario_portfolios.models;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "billeteras_virtuales")
@@ -12,7 +12,17 @@ public class BilleteraVirtual implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal saldo = BigDecimal.ZERO;
+    private String alias;
+
+    private Long numeroCBU;
+
+    private Long dineroTotal;
+    private Long dineroLibre;
+    private Long dineroInvertido;
+
+    @OneToOne(mappedBy = "billeteraVirtual")
+    @JsonBackReference
+    private Usuarios usuario;
 
     public BilleteraVirtual() {
     }
@@ -25,11 +35,51 @@ public class BilleteraVirtual implements Serializable {
         this.id = id;
     }
 
-    public BigDecimal getSaldo() {
-        return saldo;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setSaldo(BigDecimal saldo) {
-        this.saldo = saldo;
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Long getNumeroCBU() {
+        return numeroCBU;
+    }
+
+    public void setNumeroCBU(Long numeroCBU) {
+        this.numeroCBU = numeroCBU;
+    }
+
+    public Long getDineroTotal() {
+        return dineroTotal;
+    }
+
+    public void setDineroTotal(Long dineroTotal) {
+        this.dineroTotal = dineroTotal;
+    }
+
+    public Long getDineroLibre() {
+        return dineroLibre;
+    }
+
+    public void setDineroLibre(Long dineroLibre) {
+        this.dineroLibre = dineroLibre;
+    }
+
+    public Long getDineroInvertido() {
+        return dineroInvertido;
+    }
+
+    public void setDineroInvertido(Long dineroInvertido) {
+        this.dineroInvertido = dineroInvertido;
+    }
+
+    public Usuarios getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuarios usuario) {
+        this.usuario = usuario;
     }
 }
