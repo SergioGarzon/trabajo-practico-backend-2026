@@ -14,10 +14,12 @@ public class Usuarios implements Serializable {
     private String apellido;
     private String domicilio;
 
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "billetera_id", referencedColumnName = "id")
     private BilleteraVirtual billeteraVirtual;
 
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "portfolio_id", referencedColumnName = "id")
     private Portfolio portfolio;
 
     private String rol;

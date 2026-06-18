@@ -1,12 +1,27 @@
 package com.utnfrc.usuario_portfolios.models;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
+import java.io.Serializable;
 
-@Embeddable
-public class Portfolio {
+@Entity
+@Table(name = "portfolios")
+public class Portfolio implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String descripcion;
 
     public Portfolio() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getDescripcion() {
