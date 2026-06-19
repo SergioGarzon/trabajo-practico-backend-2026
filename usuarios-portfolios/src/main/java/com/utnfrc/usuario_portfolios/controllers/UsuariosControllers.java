@@ -18,6 +18,7 @@ public class UsuariosControllers {
 
     @PostMapping
     public ResponseEntity<Usuarios> create(@RequestBody Usuarios usuario) {
+        System.out.println(usuario);
         Usuarios created = service.create(usuario);
         return ResponseEntity.ok(created);
     }

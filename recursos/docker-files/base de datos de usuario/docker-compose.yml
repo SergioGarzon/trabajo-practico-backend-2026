@@ -9,4 +9,3 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: usuarios_db
-      MYSQL_USER: root
