@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.0
+    container_name: tp-keycloak-auth
+    command: start-dev
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: contenedor-mysql2
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: usuarios_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+  # --- NUEVO SERVICIO: Tu backend de Java 17 ---
+  usuarios-portfolios-service:
+    build:
+      context: ../../usuarios-portfolios # Ruta relativa para encontrar la carpeta del backend
+      dockerfile: Dockerfile
+    container_name: tp-usuarios-portfolios
+    ports:
+      - "8081:8081" # Mapea el puerto de tu app al exterior
+    environment:
+      - MYSQL_HOST=mysql-db # Apunta al nombre del servicio de Docker
+      - MYSQL_DATABASE=usuarios_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    depends_on:
+      - mysql-db # Espera a que la base de datos levante primero
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+volumes:
+  keycloak_data:
+    driver: local
+  mysql_data:
+    driver: local
+
+networks:
+  tp-network:
+    driver: bridge
