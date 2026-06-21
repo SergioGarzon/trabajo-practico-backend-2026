@@ -15,7 +15,7 @@
 **Docentes:**  <br />
 * Jorge Luis Harach Fosch
 * Diego Scarafia Altamira
-* Pablo Andrés Vaca
+* Pablo Andrés Vaca  <br />
 **Fecha de entrega:** 24 de Junio del 2026 <br />
 
 **Consigna:** <a href="./recursos/">Link</a>
