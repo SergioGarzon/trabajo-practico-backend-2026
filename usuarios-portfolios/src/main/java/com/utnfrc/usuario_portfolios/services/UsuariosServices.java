@@ -22,17 +22,16 @@ public class UsuariosServices {
         return repo.findAll();
     }
 
-    public Optional<Usuarios> getById(Long dni) {
-        return repo.findById(dni);
+    public Optional<Usuarios> getById(String userID) {
+        return repo.findById(userID);
     }
 
-    public Usuarios update(Long dni, Usuarios usuario) {
+    public Usuarios update(String userID, Usuarios usuario) {
         // ensure the entity has the right id
-        usuario.setDni(dni);
         return repo.save(usuario);
     }
 
-    public void delete(Long dni) {
-        repo.deleteById(dni);
+    public void delete(String userID) {
+        repo.deleteById(userID);
     }
 }

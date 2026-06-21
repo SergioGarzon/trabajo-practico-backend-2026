@@ -1,15 +1,19 @@
 package com.utnfrc.usuario_portfolios.models;
 
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "usuarios")
 public class Usuarios implements Serializable {
 
     @Id
-    private Long dni;
+    @Column(name = "id", length = 36) // Clave primaria asignada por el UUID de Keycloak
+    private String id;
+
+    private Long dni; // El DNI pasa a ser un atributo normal muy importante
 
     private String nombre;
     private String apellido;
@@ -27,6 +31,15 @@ public class Usuarios implements Serializable {
     private String rol;
 
     public Usuarios() {
+    }
+
+    // Getters y Setters actualizados
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Long getDni() {

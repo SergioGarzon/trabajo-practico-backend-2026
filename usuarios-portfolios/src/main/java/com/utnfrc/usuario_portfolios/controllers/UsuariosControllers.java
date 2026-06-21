@@ -1,6 +1,9 @@
 package com.utnfrc.usuario_portfolios.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -8,20 +11,32 @@ import java.util.List;
 
 import com.utnfrc.usuario_portfolios.models.Usuarios;
 import com.utnfrc.usuario_portfolios.services.UsuariosServices;
+import com.utnfrc.usuario_portfolios.dtos.RegistroDTO;
+import com.utnfrc.usuario_portfolios.services.RegistroService;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios")
 public class UsuariosControllers {
 
     @Autowired
     private UsuariosServices service;
 
-    @PostMapping
-    public ResponseEntity<Usuarios> create(@RequestBody Usuarios usuario) {
-        System.out.println(usuario);
-        Usuarios created = service.create(usuario);
-        return ResponseEntity.ok(created);
+    @Autowired
+    private RegistroService registroService;
+
+
+    @PostMapping("/registro")
+    public ResponseEntity<Usuarios> create(@RequestBody RegistroDTO dto) {
+        System.out.println("Intentando registrar usuario: " + dto.getUsername());
+
+        Usuarios created = registroService.registrarUsuarioCompleto(dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
+
+    // ========================================================================
+    // LOS DEMÁS ENDPOINTS QUEDAN IGUAL (Manejados por DNI)
+    // ========================================================================
 
     @GetMapping
     public ResponseEntity<List<Usuarios>> all() {
@@ -29,27 +44,32 @@ public class UsuariosControllers {
     }
 
     @GetMapping("/{dni}")
-    public ResponseEntity<Usuarios> getById(@PathVariable Long dni) {
-        return service.getById(dni)
+    public ResponseEntity<Usuarios> getById(@AuthenticationPrincipal Jwt jwt) {
+        String userID = jwt.getSubject();
+
+        return service.getById(userID)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{dni}")
-    public ResponseEntity<Usuarios> update(@PathVariable Long dni, @RequestBody Usuarios usuario) {
-        if (!service.getById(dni).isPresent()) {
+    @PutMapping("/update")
+    public ResponseEntity<Usuarios> update(@AuthenticationPrincipal Jwt jwt, @RequestBody Usuarios usuario) {
+        String userID = jwt.getSubject();
+
+        if (!service.getById(userID).isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        Usuarios updated = service.update(dni, usuario);
+        Usuarios updated = service.update(userID, usuario);
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{dni}")
-    public ResponseEntity<Void> delete(@PathVariable Long dni) {
-        if (!service.getById(dni).isPresent()) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal Jwt jwt) {
+        String userID = jwt.getSubject();
+        if (!service.getById(userID).isPresent()) {
             return ResponseEntity.notFound().build();
         }
-        service.delete(dni);
+        service.delete(userID);
         return ResponseEntity.noContent().build();
     }
 }

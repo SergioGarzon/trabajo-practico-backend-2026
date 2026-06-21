@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import com.utnfrc.usuario_portfolios.models.Usuarios;
 
 @Repository
-public interface UsuariosRepositories extends JpaRepository<Usuarios, Long> {
+public interface UsuariosRepositories extends JpaRepository<Usuarios, String> {
 
 }
