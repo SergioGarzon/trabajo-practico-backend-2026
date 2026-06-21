@@ -24,6 +24,17 @@ public class UsuariosControllers {
     @Autowired
     private RegistroService registroService;
 
+    //Este post crea a un nuevo Usuario tanto en la base de datos como en el Keycloak
+    //{
+    //    "username" : "GastonB",
+    //    "email" : "Gaston@gmail.com",
+    //    "password" : "123456",
+    //    "nombre" : "Gaston",
+    //    "rol" : "Admin",
+    //    "dni" : 3566544,
+    //    "apellido": "Blangino",
+    //    "domicilio" : "Moron 2655"
+    //}
 
     @PostMapping("/registro")
     public ResponseEntity<Usuarios> create(@RequestBody RegistroDTO dto) {
@@ -34,14 +45,14 @@ public class UsuariosControllers {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // ========================================================================
-    // LOS DEMÁS ENDPOINTS QUEDAN IGUAL (Manejados por DNI)
-    // ========================================================================
+
 
     @GetMapping
     public ResponseEntity<List<Usuarios>> all() {
         return ResponseEntity.ok(service.getAll());
     }
+
+    //Como el id usado es el mismo que hace el Keycloak siempre lo obtenemos del JWT
 
     @GetMapping("/{dni}")
     public ResponseEntity<Usuarios> getById(@AuthenticationPrincipal Jwt jwt) {

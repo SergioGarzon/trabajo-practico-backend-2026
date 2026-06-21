@@ -1,6 +1,7 @@
 package com.utnfrc.usuario_portfolios.models;
 
 import com.utnfrc.usuario_portfolios.excepciones.SaldoInsuficienteException;
+import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -19,6 +20,7 @@ public class BilleteraVirtual implements Serializable {
 
     private Long dineroLibre;
     private Long dineroInvertido;
+    private Long dineroBloqueado;
 
     @OneToOne(mappedBy = "billeteraVirtual")
     @JsonBackReference
@@ -71,6 +73,9 @@ public class BilleteraVirtual implements Serializable {
         return usuario;
     }
 
+    public Long getDineroBloqueado() {return dineroBloqueado;}
+    public void setDineroBloqueado(Long dineroBloqueado) {}
+
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
     }
@@ -89,6 +94,4 @@ public class BilleteraVirtual implements Serializable {
         if (cant <= 0){ throw new IllegalArgumentException("La cantidad a ingresar debe ser mayor a 0"); }
         setDineroLibre(dineroLibre + cant);
     }
-
-
 }
