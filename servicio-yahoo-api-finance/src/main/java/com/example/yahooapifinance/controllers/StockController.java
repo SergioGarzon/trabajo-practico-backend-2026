@@ -1,27 +1,28 @@
 package com.example.yahooapifinance.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.yahooapifinance.services.StockService;
-
-import yahoofinance.Stock;
+import com.example.yahooapifinance.services.RapidStockService;
 
 
 @RestController
-@RequestMapping("/api/stocks")
+@RequestMapping("/stocks")
 public class StockController {
 
-	private final StockService stockService;
+	@Autowired
+	private RapidStockService rapidStockService;
 
-    public StockController(StockService stockService) {
-        this.stockService = stockService;
-    }
 
     @GetMapping("/{symbol}")
-    public Stock getStock(@PathVariable String symbol) {
-        return stockService.getStockDetails(symbol.toUpperCase());
+    public ResponseEntity<String> getStock(@PathVariable String symbol) {
+        String jsonResponse = rapidStockService.getStockDataFromRapidApi(symbol);
+        return ResponseEntity.ok()
+                             .header("Content-Type", "application/json")
+                             .body(jsonResponse);
     }
 }
