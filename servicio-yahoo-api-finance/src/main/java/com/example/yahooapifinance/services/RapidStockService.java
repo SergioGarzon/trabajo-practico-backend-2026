@@ -11,14 +11,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class RapidStockService implements IRapidStockService {
 	
-	
-	private final RestTemplate restTemplate;
-
-    public RapidStockService() {
-        this.restTemplate = new RestTemplate();
-    }
-
     public String getStockDataFromRapidApi(String symbol) {
+    	
+    	RestTemplate restTemplate = new RestTemplate();
 
     	String url = "https://yahoo-finance-real-time1.p.rapidapi.com/stock/get-options?symbol=" 
                      + symbol.toUpperCase() + "&lang=en-US&region=US";
