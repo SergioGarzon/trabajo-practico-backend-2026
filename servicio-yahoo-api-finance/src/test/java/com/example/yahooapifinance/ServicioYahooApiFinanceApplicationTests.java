@@ -1,10 +1,10 @@
-package com.utnfrc.yahoofinanceapi;
+package com.example.yahooapifinance;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class YahoofinanceapiApplicationTests {
+class ServicioYahooApiFinanceApplicationTests {
 
 	@Test
 	void contextLoads() {
