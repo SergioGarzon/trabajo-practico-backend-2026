@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 5s # Tiempo global de recolección de datos
+
+scrape_configs:
+  # 1. Monitoreo del propio motor de Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 2. Monitoreo de tu Microservicio de Cotizaciones de Yahoo
+  - job_name: 'servicio-yahoo-finance'
+    metrics_path: '/servidormock/api/v1/actuator/prometheus' # ¡Ojo! Incluye tu context-path aquí
+    scrape_interval: 2s
+    static_configs:
+      - targets: ['servicio-yahoo-api-finance:8083'] # Nombre del servicio Docker y su puerto real
+        labels:
+          application: "Microservicio Yahoo Finance API"
