@@ -13,4 +13,8 @@ public interface OrdenCompraRepository extends JpaRepository<OrdenCompra, Long> 
     List<OrdenCompra> findByUsuarioId(Long usuarioId);
 
     List<OrdenCompra> findBySimboloAccionAndEstado(String simboloAccion, EstadoOrden estado);
+
+    List<OrdenCompra> findBySimboloAccionAndPrecioPorAccionGreaterThanEqualAndEstadoInAndCantidadRestanteGreaterThanOrderByPrecioPorAccionDesc(
+            String simboloAccion, Double precioPorAccion, List<EstadoOrden> estados, Long cantidadRestante);
 }
+

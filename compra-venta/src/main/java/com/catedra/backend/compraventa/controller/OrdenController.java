@@ -4,6 +4,7 @@ import com.catedra.backend.compraventa.dto.OrdenCompraRequestDto;
 import com.catedra.backend.compraventa.dto.OrdenResponseDto;
 import com.catedra.backend.compraventa.dto.OrdenVentaRequestDto;
 import com.catedra.backend.compraventa.service.OrdenService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,13 @@ public class OrdenController {
     private final OrdenService ordenService;
 
     @PostMapping("/compra")
-    public ResponseEntity<OrdenResponseDto> crearOrdenCompra(@RequestBody OrdenCompraRequestDto requestDto) {
+    public ResponseEntity<OrdenResponseDto> crearOrdenCompra(@Valid @RequestBody OrdenCompraRequestDto requestDto) {
         OrdenResponseDto response = ordenService.crearOrdenCompra(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/venta")
-    public ResponseEntity<OrdenResponseDto> crearOrdenVenta(@RequestBody OrdenVentaRequestDto requestDto) {
+    public ResponseEntity<OrdenResponseDto> crearOrdenVenta(@Valid @RequestBody OrdenVentaRequestDto requestDto) {
         OrdenResponseDto response = ordenService.crearOrdenVenta(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

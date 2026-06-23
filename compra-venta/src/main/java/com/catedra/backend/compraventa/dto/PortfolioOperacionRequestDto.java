@@ -3,12 +3,14 @@ package com.catedra.backend.compraventa.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class OrdenVentaRequestDto {
+@AllArgsConstructor
+public class PortfolioOperacionRequestDto {
 
     @NotNull
     private Long usuarioId;
@@ -18,9 +20,5 @@ public class OrdenVentaRequestDto {
 
     @NotNull
     @Positive
-    private Double precioPorAccion;
-
-    @NotNull
-    @Positive
-    private Long cantidadOriginal;
+    private Long cantidad;
 }

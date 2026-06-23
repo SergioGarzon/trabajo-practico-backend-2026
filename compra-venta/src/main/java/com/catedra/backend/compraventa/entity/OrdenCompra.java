@@ -14,4 +14,7 @@ public class OrdenCompra extends Orden {
 
     @Column(nullable = false)
     private Long cantidadPedida;
+
+    @Column(nullable = false)
+    private Long cantidadRestante;
 }

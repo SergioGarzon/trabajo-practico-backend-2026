@@ -2,6 +2,7 @@ package com.catedra.backend.compraventa.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -20,6 +21,39 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TransaccionNoEncontradaException.class)
     public ResponseEntity<Map<String, Object>> handleTransaccionNoEncontrada(TransaccionNoEncontradaException ex) {
         return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SaldoInsuficienteException.class)
+    public ResponseEntity<Map<String, Object>> handleSaldoInsuficiente(SaldoInsuficienteException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(SinContraparteException.class)
+    public ResponseEntity<Map<String, Object>> handleSinContraparte(SinContraparteException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BloqueoFondosException.class)
+    public ResponseEntity<Map<String, Object>> handleBloqueoFondos(BloqueoFondosException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_GATEWAY);
+    }
+
+    @ExceptionHandler(TenenciaInsuficienteException.class)
+    public ResponseEntity<Map<String, Object>> handleTenenciaInsuficiente(TenenciaInsuficienteException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CotizacionNoEncontradaException.class)
+    public ResponseEntity<Map<String, Object>> handleCotizacionNoEncontrada(CotizacionNoEncontradaException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        StringBuilder mensajes = new StringBuilder();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                mensajes.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; "));
+        return buildErrorResponse(mensajes.toString().trim(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

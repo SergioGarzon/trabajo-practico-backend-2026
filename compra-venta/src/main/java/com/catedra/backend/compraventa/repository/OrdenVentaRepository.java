@@ -13,4 +13,8 @@ public interface OrdenVentaRepository extends JpaRepository<OrdenVenta, Long> {
     List<OrdenVenta> findByUsuarioId(Long usuarioId);
 
     List<OrdenVenta> findBySimboloAccionAndEstado(String simboloAccion, EstadoOrden estado);
+
+    List<OrdenVenta> findBySimboloAccionAndPrecioPorAccionLessThanEqualAndEstadoInAndCantidadRestanteGreaterThanOrderByPrecioPorAccionAsc(
+            String simboloAccion, Double precioPorAccion, List<EstadoOrden> estados, Long cantidadRestante);
 }
+
