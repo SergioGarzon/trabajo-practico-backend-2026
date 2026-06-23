@@ -17,7 +17,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // ¡IMPORTANTE! Dejamos el registro público para no pedir token al crear usuario
                         .requestMatchers("/api/usuarios/registro").permitAll()
-
+                        .requestMatchers("/error").permitAll()
                         // Cualquier otra petición (como ingresar dinero) exige token válido
                         .anyRequest().authenticated()
                 )

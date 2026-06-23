@@ -18,7 +18,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         // Si tenés algún endpoint que deba ser público, lo declarás acá:
                         // .pathMatchers("/api/public/**").permitAll()
-                        //.pathMatchers("/usuarios").permitAll()
+                        .pathMatchers("/api/usuarios/registro").permitAll()
+
                         // Cualquier otra petición que pase por el gateway exige token válido
                         .anyExchange().authenticated()
                 )

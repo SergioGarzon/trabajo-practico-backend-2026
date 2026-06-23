@@ -3,11 +3,16 @@ package com.utnfrc.usuario_portfolios.services;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudDineroDTO;
 import com.utnfrc.usuario_portfolios.excepciones.BilleteraExistenteException;
 import com.utnfrc.usuario_portfolios.excepciones.BilleteraVituralNoExisteException;
+import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
+import com.utnfrc.usuario_portfolios.models.Accion;
 import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
+import com.utnfrc.usuario_portfolios.models.Portfolio;
 import com.utnfrc.usuario_portfolios.models.Usuarios;
 import com.utnfrc.usuario_portfolios.repositories.BilleteraVirtualRepository;
 import com.utnfrc.usuario_portfolios.repositories.UsuariosRepositories;
+import com.utnfrc.usuario_portfolios.services.AccionService;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -21,6 +26,9 @@ public class BilleteraVirtualService {
     private final BilleteraVirtualRepository bvRepository;
     private final SecureRandom random = new SecureRandom();
     private final UsuariosRepositories usuariosRepositories;
+
+    @Autowired
+    private AccionService accionService;
 
     public BilleteraVirtualService(UsuariosServices usuariosService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories) {
         this.usuariosRepositories = usuariosRepositories;
@@ -43,6 +51,7 @@ public class BilleteraVirtualService {
         newBV.setAlias(usuario.getNombre() + " " + usuario.getApellido());
         newBV.setDineroLibre(0L);
         newBV.setDineroInvertido(0L);
+        newBV.setDineroBloqueado(0L);
         newBV.setUsuario(usuario);
         usuario.setBilleteraVirtual(newBV);
         usuariosRepositories.save(usuario);
@@ -97,6 +106,7 @@ public class BilleteraVirtualService {
         bv.setDineroLibre(bv.getDineroLibre() - monto);
 
         Long actualBloqueado = bv.getDineroBloqueado() != null ? bv.getDineroBloqueado() : 0L;
+        System.out.println(actualBloqueado + " AaaAAAAAAAAAAAAA");
         bv.setDineroBloqueado(actualBloqueado + monto);
 
         bvRepository.save(bv);
@@ -109,6 +119,9 @@ public class BilleteraVirtualService {
                 .orElseThrow(() -> new BilleteraExistenteException("Billetera no encontrada"));
 
         Long monto = dto.getMonto();
+        Accion acc = accionService.buscarPorSimbolo(dto.getSimbolo());
+        if (acc == null) {throw new TransaccionInversionException("Accion no encontrada");}
+
 
         // Control de seguridad: Validamos que realmente tengamos dinero bloqueado suficiente para procesar
         if (bv.getDineroBloqueado() < monto) {
@@ -118,9 +131,13 @@ public class BilleteraVirtualService {
         // Desbloqueamos el dinero del limbo primero
         bv.setDineroBloqueado(bv.getDineroBloqueado() - monto);
 
+        Portfolio pf = bv.getUsuario().getPortfolio();
+
+
         if ("CONFIRMAR".equalsIgnoreCase(dto.getEstadoAccion())) {
             // CASO A: Compra afirmativa -> Pasa a dinero invertido
             bv.setDineroInvertido(bv.getDineroInvertido() + monto);
+            pf.addAccion(acc, dto.getCantidad());
         } else if ("RECHAZAR".equalsIgnoreCase(dto.getEstadoAccion())) {
             // CASO B: Compra rechazada -> Se devuelve al dinero libre
             bv.setDineroLibre(bv.getDineroLibre() + monto);

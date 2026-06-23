@@ -74,7 +74,7 @@ public class BilleteraVirtual implements Serializable {
     }
 
     public Long getDineroBloqueado() {return dineroBloqueado;}
-    public void setDineroBloqueado(Long dineroBloqueado) {}
+    public void setDineroBloqueado(Long dineroBloqueado) {this.dineroBloqueado = dineroBloqueado;}
 
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
