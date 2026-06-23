@@ -46,10 +46,10 @@ public class StockController {
     }    
   
     @GetMapping("/all-stocks")
-    public List<StockJSON> getStocksJSON() {
+    public ResponseEntity<?> getStocksJSON() {
     	logger.info("Se obtiene las acciones desde el JSON estatico");
         List<StockJSON> stocks = stockServiceJSON.getStocks();
-        return (stocks);
+        return ResponseEntity.ok(stocks);
     }
 
 }
