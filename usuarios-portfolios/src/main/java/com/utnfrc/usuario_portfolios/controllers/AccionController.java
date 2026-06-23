@@ -25,4 +25,7 @@ public class AccionController {
         return accionService.crear();
     }
 
+    @GetMapping("/guardar")
+    public ResponseEntity<Void> guardar() {accionService.sincronizarAcciones(); return ResponseEntity.ok().build();}
+
 }

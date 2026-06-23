@@ -1,14 +1,10 @@
 package com.utnfrc.usuario_portfolios.services;
 
 import com.utnfrc.usuario_portfolios.dtos.SolicitudDineroDTO;
-import com.utnfrc.usuario_portfolios.excepciones.BilleteraExistenteException;
-import com.utnfrc.usuario_portfolios.excepciones.BilleteraVituralNoExisteException;
-import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
-import com.utnfrc.usuario_portfolios.models.Accion;
-import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
-import com.utnfrc.usuario_portfolios.models.Portfolio;
-import com.utnfrc.usuario_portfolios.models.Usuarios;
+import com.utnfrc.usuario_portfolios.excepciones.*;
+import com.utnfrc.usuario_portfolios.models.*;
 import com.utnfrc.usuario_portfolios.repositories.BilleteraVirtualRepository;
+import com.utnfrc.usuario_portfolios.repositories.ReservaSaldoRepository;
 import com.utnfrc.usuario_portfolios.repositories.UsuariosRepositories;
 import com.utnfrc.usuario_portfolios.services.AccionService;
 import jakarta.transaction.Transactional;
@@ -26,14 +22,16 @@ public class BilleteraVirtualService {
     private final BilleteraVirtualRepository bvRepository;
     private final SecureRandom random = new SecureRandom();
     private final UsuariosRepositories usuariosRepositories;
+    private final ReservaSaldoRepository reservaRepository;
 
     @Autowired
     private AccionService accionService;
 
-    public BilleteraVirtualService(UsuariosServices usuariosService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories) {
+    public BilleteraVirtualService(UsuariosServices usuariosService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository) {
         this.usuariosRepositories = usuariosRepositories;
         this.usuariosService = usuariosService;
         this.bvRepository = bvRepository;
+        this.reservaRepository = reservaRepository;
     }
 
     @Transactional
@@ -93,58 +91,113 @@ public class BilleteraVirtualService {
 
 
 
-    @Transactional
-    public boolean solicitarYBloquearDinero(String keycloakUserId, Long monto) {
-        BilleteraVirtual bv = bvRepository.findByUsuario_Id(keycloakUserId)
-                .orElseThrow(() -> new BilleteraExistenteException("Billetera no encontrada"));
+//    @Transactional
+//    public boolean solicitarYBloquearDinero(String keycloakUserId, Long monto) {
+//        BilleteraVirtual bv = bvRepository.findByUsuario_Id(keycloakUserId)
+//                .orElseThrow(() -> new BilleteraExistenteException("Billetera no encontrada"));
+//
+//        // 1. Validamos si tiene fondos suficientes en el dinero LIBRE
+//        if (bv.getDineroLibre() < monto) {
+//            return false;
+//        }
+//
+//        bv.setDineroLibre(bv.getDineroLibre() - monto);
+//
+//        Long actualBloqueado = bv.getDineroBloqueado() != null ? bv.getDineroBloqueado() : 0L;
+//        System.out.println(actualBloqueado + " AaaAAAAAAAAAAAAA");
+//        bv.setDineroBloqueado(actualBloqueado + monto);
+//
+//        bvRepository.save(bv);
+//        return true;
+//    }
 
-        // 1. Validamos si tiene fondos suficientes en el dinero LIBRE
+    @Transactional
+    public String solicitarYBloquearDinero(String keycloakUserId, Long monto) {
+        BilleteraVirtual bv = bvRepository.findByUsuario_Id(keycloakUserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Billetera no encontrada"));
+
         if (bv.getDineroLibre() < monto) {
-            return false;
+            throw new SaldoInsuficienteException("Saldo insuficiente en la billetera virtual.");
         }
 
+        // 1. Restamos del dinero libre y sumamos al bloqueado general
         bv.setDineroLibre(bv.getDineroLibre() - monto);
-
-        Long actualBloqueado = bv.getDineroBloqueado() != null ? bv.getDineroBloqueado() : 0L;
-        System.out.println(actualBloqueado + " AaaAAAAAAAAAAAAA");
-        bv.setDineroBloqueado(actualBloqueado + monto);
-
+        bv.setDineroBloqueado((bv.getDineroBloqueado() != null ? bv.getDineroBloqueado() : 0L) + monto);
         bvRepository.save(bv);
-        return true;
+
+        // 2. Creamos el registro del Ledger con su ID único
+        ReservaSaldo reserva = new ReservaSaldo();
+        reserva.setMonto(monto);
+        reserva.setBilletera(bv);
+
+        reservaRepository.save(reserva); // Asumiendo que creás este JpaRepository
+
+        return reserva.getId(); // Retornamos el UUID generado
     }
 
+
+//    @Transactional
+//    public BilleteraVirtual procesarRespuestaExterna(String userId, SolicitudDineroDTO dto) {
+//        BilleteraVirtual bv = bvRepository.findByUsuario_Id(userId)
+//                .orElseThrow(() -> new BilleteraExistenteException("Billetera no encontrada"));
+//
+//        Long monto = dto.getMonto();
+//        Accion acc = accionService.buscarPorSimbolo(dto.getSimbolo());
+//        if (acc == null) {throw new TransaccionInversionException("Accion no encontrada");}
+//
+//
+//        // Control de seguridad: Validamos que realmente tengamos dinero bloqueado suficiente para procesar
+//        if (bv.getDineroBloqueado() < monto) {
+//            throw new IllegalArgumentException("No hay suficiente dinero bloqueado para procesar esta acción");
+//        }
+//
+//        // Desbloqueamos el dinero del limbo primero
+//        bv.setDineroBloqueado(bv.getDineroBloqueado() - monto);
+//
+//        Portfolio pf = bv.getUsuario().getPortfolio();
+//
+//
+//        if ("CONFIRMAR".equalsIgnoreCase(dto.getEstadoAccion())) {
+//            // CASO A: Compra afirmativa -> Pasa a dinero invertido
+//            bv.setDineroInvertido(bv.getDineroInvertido() + monto);
+//            pf.addAccion(acc, dto.getCantidad());
+//        } else if ("RECHAZAR".equalsIgnoreCase(dto.getEstadoAccion())) {
+//            // CASO B: Compra rechazada -> Se devuelve al dinero libre
+//            bv.setDineroLibre(bv.getDineroLibre() + monto);
+//        } else {
+//            throw new IllegalArgumentException("Estado de acción no reconocido");
+//        }
+//
+//        return bvRepository.save(bv);
+//    }
+
     @Transactional
-    public BilleteraVirtual procesarRespuestaExterna(String userId, SolicitudDineroDTO dto) {
-        BilleteraVirtual bv = bvRepository.findByUsuario_Id(userId)
-                .orElseThrow(() -> new BilleteraExistenteException("Billetera no encontrada"));
+    public BilleteraVirtual procesarRespuestaExterna(SolicitudDineroDTO dto) {
+        // 1. Buscamos la transacción específica por su ID único. Así evitamos liberar cualquier cosa.
+        ReservaSaldo reserva = reservaRepository.findById(dto.getIdTransaccion())
+                .orElseThrow(() -> new ResourceNotFoundException("La transacción de bloqueo no existe."));
 
-        Long monto = dto.getMonto();
-        Accion acc = accionService.buscarPorSimbolo(dto.getSimbolo());
-        if (acc == null) {throw new TransaccionInversionException("Accion no encontrada");}
-
-
-        // Control de seguridad: Validamos que realmente tengamos dinero bloqueado suficiente para procesar
-        if (bv.getDineroBloqueado() < monto) {
-            throw new IllegalArgumentException("No hay suficiente dinero bloqueado para procesar esta acción");
+        if (!"PENDIENTE".equals(reserva.getEstado())) {
+            throw new IllegalStateException("Esta transacción ya fue procesada anteriormente.");
         }
 
-        // Desbloqueamos el dinero del limbo primero
+        BilleteraVirtual bv = reserva.getBilletera();
+        Long monto = reserva.getMonto();
+
+        // 2. Desbloqueamos el dinero del limbo general
         bv.setDineroBloqueado(bv.getDineroBloqueado() - monto);
 
-        Portfolio pf = bv.getUsuario().getPortfolio();
-
-
         if ("CONFIRMAR".equalsIgnoreCase(dto.getEstadoAccion())) {
-            // CASO A: Compra afirmativa -> Pasa a dinero invertido
             bv.setDineroInvertido(bv.getDineroInvertido() + monto);
-            pf.addAccion(acc, dto.getCantidad());
+            reserva.setEstado("CONFIRMADA");
         } else if ("RECHAZAR".equalsIgnoreCase(dto.getEstadoAccion())) {
-            // CASO B: Compra rechazada -> Se devuelve al dinero libre
             bv.setDineroLibre(bv.getDineroLibre() + monto);
+            reserva.setEstado("RECHAZADA");
         } else {
-            throw new IllegalArgumentException("Estado de acción no reconocido");
+            throw new IllegalArgumentException("Accion militar no reconocida.");
         }
 
+        reservaRepository.save(reserva);
         return bvRepository.save(bv);
     }
 

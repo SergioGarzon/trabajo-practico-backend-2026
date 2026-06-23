@@ -1,6 +1,7 @@
 package com.utnfrc.usuario_portfolios.dtos;
 
 public class SolicitudDineroDTO {
+    private String idTransaccion;
     private Long monto;
     private String estadoAccion; // "CONFIRMAR" o "RECHAZAR" (Para la segunda fase)
     private String simbolo;
@@ -15,4 +16,6 @@ public class SolicitudDineroDTO {
     public void setSimbolo(String simbolo) { this.simbolo = simbolo; }
     public Long getCantidad() { return cantidad; }
     public void setCantidad(Long cantidad) { this.cantidad = cantidad; }
+    public String getIdTransaccion() { return idTransaccion; }
+    public void setIdTransaccion(String idTransaccion) { this.idTransaccion = idTransaccion; }
 }

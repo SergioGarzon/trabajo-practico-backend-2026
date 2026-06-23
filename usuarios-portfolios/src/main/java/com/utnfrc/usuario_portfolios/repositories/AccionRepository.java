@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface AccionRepository extends JpaRepository<Accion, Long> {
-    Optional<Accion> findBySimboloIgnoreCase(String simbolo);
+    Optional<Accion> findBySimbolo(String simbolo);
 }
