@@ -12,6 +12,6 @@ scrape_configs:
     metrics_path: '/servidormock/api/v1/actuator/prometheus' # ¡Ojo! Incluye tu context-path aquí
     scrape_interval: 2s
     static_configs:
-      - targets: ['servicio-yahoo-api-finance:8083'] # Nombre del servicio Docker y su puerto real
+      - targets: ['servicio-yahoo-api-finance:8084'] # Nombre del servicio Docker y su puerto real
         labels:
           application: "Microservicio Yahoo Finance API"
