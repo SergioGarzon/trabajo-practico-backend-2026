@@ -7,14 +7,7 @@ import java.util.Map;
 
 // IMPLEMENTACIÓN TEMPORAL (MOCK): Esta clase devuelve cotizaciones estáticas hardcodeadas.
 //
-// Cuando el microservicio de Cotizaciones esté listo, se debe:
-// 1. Crear un FeignClient (ej. CotizacionClient) apuntando al microservicio de cotizaciones.
-// 2. Crear una nueva implementación de CotizacionService (ej. CotizacionServiceImpl) que
-//    inyecte ese FeignClient y delegue las consultas al microservicio real.
-// 3. Marcar esa nueva implementación con @Service y @Primary para que Spring la use
-//    en lugar de esta clase mock.
-// 4. Opcionalmente, eliminar o anotar esta clase con @Profile("dev") para mantenerla
-//    solo en entornos de desarrollo/testing.
+
 @Service
 public class CotizacionServiceMockImpl implements CotizacionService {
 
@@ -23,8 +16,7 @@ public class CotizacionServiceMockImpl implements CotizacionService {
             "AAPL", 28000.0,
             "GOOGL", 22000.0,
             "TSLA", 31000.0,
-            "AMZN", 26000.0
-    );
+            "AMZN", 26000.0);
 
     @Override
     public Double obtenerPrecioPorSimbolo(String simbolo) {
