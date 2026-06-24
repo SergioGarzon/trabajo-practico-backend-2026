@@ -58,7 +58,7 @@ public class PortfolioService {
         if (existente == null) {
             p.addAccion(accion, cantidad);
         } else {
-            existente.setCantidad(existente.getCantidad() + cantidad);
+            existente.setCantidadLibre(existente.getCantidadLibre() + cantidad);
         }
 
         return repo.save(p);
@@ -78,7 +78,7 @@ public class PortfolioService {
         ItemPortfolio item = findItemBySimbolo(p, simbolo);
         if (item == null) throw new IllegalArgumentException("Accion no encontrada en el portfolio");
 
-        Long actual = item.getCantidad();
+        Long actual = item.getCantidadLibre();
         if (cantidadARestar > actual) {
             throw new IllegalArgumentException("Cantidad a restar mayor que la disponible");
         }
@@ -96,7 +96,7 @@ public class PortfolioService {
                 }
             }
         } else {
-            item.setCantidad(nueva);
+            item.setCantidadLibre(nueva);
         }
 
         return repo.save(p);

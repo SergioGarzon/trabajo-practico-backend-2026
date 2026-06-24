@@ -2,71 +2,47 @@ version: '3.8'
 
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0.0
-    container_name: tp-keycloak-auth
-    command: start-dev
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: keycloak
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
-
-      # --- PERSISTENCIA: Conectamos Keycloak a MySQL ---
-      - KC_DB=mysql
-      # Apuntamos al servicio 'mysql-db' y a su base de datos asignada
-      - KC_DB_URL=jdbc:mysql://mysql-db:3306/keycloak_db?createDatabaseIfNotExist=true
-      - KC_DB_USERNAME=root
-      - KC_DB_PASSWORD=root
+    command: start-dev --http-port=8180
     ports:
-      - "8080:8080"
+      - "8180:8180"
+    restart: unless-stopped
+    networks:
+      - bolsa-network
+
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    container_name: prometheus
+    restart: unless-stopped
     volumes:
-      # Limpiamos el espacio vacío y mantenemos el mapeo a tu volumen en disco
-      - keycloak_data:/opt/keycloak/data
-    networks:
-      - tp-network
-    restart: unless-stopped
-    depends_on:
-      - mysql-db # Forzamos a Keycloak a esperar que MySQL esté listo
-
-  mysql-db:
-    image: mysql:8.0
-    container_name: contenedor-mysql2
+      - .:/etc/prometheus
     ports:
-      - "3306:3306"
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/PROMETHEUS.yml"
+    networks:
+      - bolsa-network
+
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: usuarios_db
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
-      - mysql_data:/var/lib/mysql
-      # TRUCO DE AUTOMATIZACIÓN: Script en memoria para forzar la creación de la BD de Keycloak
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
-    networks:
-      - tp-network
-    restart: unless-stopped
-
-  # --- Tu backend de Java 17 ---
-  usuarios-portfolios-service:
-    build:
-      context: ../../usuarios-portfolios
-      dockerfile: Dockerfile
-    container_name: tp-usuarios-portfolios
-    ports:
-      - "8081:8081"
-    environment:
-      - MYSQL_HOST=mysql-db
-      - MYSQL_DATABASE=usuarios_db
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
+      - ./data/grafana:/var/lib/grafana
     depends_on:
-      - mysql-db
+      - prometheus
     networks:
-      - tp-network
-    restart: unless-stopped
-
-volumes:
-  keycloak_data:
-    driver: local
-  mysql_data:
-    driver: local
+      - bolsa-network
 
 networks:
-  tp-network:
+  bolsa-network:
     driver: bridge
