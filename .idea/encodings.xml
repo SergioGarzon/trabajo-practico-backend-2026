@@ -3,6 +3,8 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/api-gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/api-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/servicio-emparejamiento-ordenes-compra-venta/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/servicio-yahoo-api-finance/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/usuarios-portfolios/src/main/java" charset="UTF-8" />
   </component>
 </project>

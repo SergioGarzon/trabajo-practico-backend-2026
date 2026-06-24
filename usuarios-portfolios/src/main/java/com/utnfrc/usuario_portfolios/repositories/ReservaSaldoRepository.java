@@ -1,0 +1,7 @@
+package com.utnfrc.usuario_portfolios.repositories;
+
+import com.utnfrc.usuario_portfolios.models.ReservaSaldo;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReservaSaldoRepository extends JpaRepository<ReservaSaldo, String> {
+}

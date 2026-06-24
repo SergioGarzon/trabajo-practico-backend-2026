@@ -1,14 +1,18 @@
 package com.utnfrc.usuario_portfolios.models;
 
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "usuarios")
 public class Usuarios implements Serializable {
 
     @Id
+    @Column(name = "id", length = 36)
+    private String id;
+
     private Long dni;
 
     private String nombre;
@@ -27,6 +31,14 @@ public class Usuarios implements Serializable {
     private String rol;
 
     public Usuarios() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Long getDni() {

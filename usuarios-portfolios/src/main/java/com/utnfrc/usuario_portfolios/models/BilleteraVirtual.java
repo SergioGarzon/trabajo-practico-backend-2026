@@ -1,5 +1,7 @@
 package com.utnfrc.usuario_portfolios.models;
 
+import com.utnfrc.usuario_portfolios.excepciones.SaldoInsuficienteException;
+import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -16,9 +18,9 @@ public class BilleteraVirtual implements Serializable {
 
     private Long numeroCBU;
 
-    private Long dineroTotal;
     private Long dineroLibre;
     private Long dineroInvertido;
+    private Long dineroBloqueado;
 
     @OneToOne(mappedBy = "billeteraVirtual")
     @JsonBackReference
@@ -51,14 +53,6 @@ public class BilleteraVirtual implements Serializable {
         this.numeroCBU = numeroCBU;
     }
 
-    public Long getDineroTotal() {
-        return dineroTotal;
-    }
-
-    public void setDineroTotal(Long dineroTotal) {
-        this.dineroTotal = dineroTotal;
-    }
-
     public Long getDineroLibre() {
         return dineroLibre;
     }
@@ -79,7 +73,25 @@ public class BilleteraVirtual implements Serializable {
         return usuario;
     }
 
+    public Long getDineroBloqueado() {return dineroBloqueado;}
+    public void setDineroBloqueado(Long dineroBloqueado) {this.dineroBloqueado = dineroBloqueado;}
+
     public void setUsuario(Usuarios usuario) {
         this.usuario = usuario;
+    }
+
+    public void retirarDinero(Long cant){
+        if (cant <= 0){
+            throw new IllegalArgumentException("La cantidad a retirar debe ser mayor a 0");
+        }
+        if (cant > dineroLibre){
+            throw new SaldoInsuficienteException("No tienes saldo suficiente para realizar el retiro POBRE");
+        }
+        setDineroLibre(dineroLibre - cant);
+    }
+
+    public void ingresarDinero(Long cant){
+        if (cant <= 0){ throw new IllegalArgumentException("La cantidad a ingresar debe ser mayor a 0"); }
+        setDineroLibre(dineroLibre + cant);
     }
 }
