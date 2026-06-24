@@ -16,12 +16,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/usuarios/registro").permitAll()
+                        .requestMatchers("/api/ventas/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/ventas").permitAll()
-                        // Cualquier otra petición (como ingresar dinero) exige token válido
                         .anyRequest().authenticated()
                 )
-                // Activamos la lectura de tokens JWT
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(org.springframework.security.config.Customizer.withDefaults()));
 
         return http.build();

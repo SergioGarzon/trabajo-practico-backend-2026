@@ -1,0 +1,54 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: false
+
+      routes:
+        - id: cotizaciones-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/servidormock/api/v1/**
+
+        - id: usuarios-registro-publico
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/usuarios/registro
+
+        - id: usuarios-portfolios-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/usuarios/**,/api/portfolios/**,/api/billetera/**,/api/ventas/**
+          filters:
+            - TokenRelay
+
+        - id: compra-venta-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/ordenes/**,/api/transacciones/**,/api/historial/**
+          filters:
+            - TokenRelay
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/users-tp
+          jwk-set-uri: http://localhost:8180/realms/users-tp/protocol/openid-connect/certs
