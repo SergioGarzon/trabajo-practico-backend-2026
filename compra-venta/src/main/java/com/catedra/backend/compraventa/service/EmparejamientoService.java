@@ -104,7 +104,7 @@ public class EmparejamientoService {
                 ordenCompra.getSimboloAccion(), cantidadTransaccion);
     }
 
-    private void bloquearFondosComprador(Long usuarioId, Double monto) {
+    private void bloquearFondosComprador(String usuarioId, Double monto) {
         try {
             BilleteraOperacionResponseDto respuesta = billeteraClient.bloquearFondos(
                     new BilleteraOperacionRequestDto(usuarioId, monto));
@@ -118,11 +118,11 @@ public class EmparejamientoService {
         }
     }
 
-    private void resolverFondosComprador(Long usuarioId, Double monto) {
+    private void resolverFondosComprador(String usuarioId, Double monto) {
         billeteraClient.resolverOperacion(new BilleteraOperacionRequestDto(usuarioId, monto));
     }
 
-    private void transferirAcciones(Long vendedorId, Long compradorId, String simboloAccion, Long cantidad) {
+    private void transferirAcciones(String vendedorId, String compradorId, String simboloAccion, Long cantidad) {
         portfolioClient.actualizarTenencia(new PortfolioOperacionRequestDto(vendedorId, simboloAccion, -cantidad));
         portfolioClient.actualizarTenencia(new PortfolioOperacionRequestDto(compradorId, simboloAccion, cantidad));
     }

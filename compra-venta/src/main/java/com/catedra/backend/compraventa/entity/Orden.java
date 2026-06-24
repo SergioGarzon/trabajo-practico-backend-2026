@@ -3,11 +3,14 @@ package com.catedra.backend.compraventa.entity;
 import com.catedra.backend.compraventa.entity.enums.EstadoOrden;
 import jakarta.persistence.*;
 import lombok.Data;
+
+
 import lombok.NoArgsConstructor;
+
+
 
 import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class Orden {
@@ -17,7 +20,7 @@ public abstract class Orden {
     private Long id;
 
     @Column(nullable = false)
-    private Long usuarioId;
+    private String usuarioId;
 
     @Column(nullable = false)
     private String simboloAccion;

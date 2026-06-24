@@ -1,20 +1,25 @@
 package com.catedra.backend.compraventa.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+
+
 import lombok.Data;
+
+
 import lombok.NoArgsConstructor;
 
-@Data
+
+
 @NoArgsConstructor
 @AllArgsConstructor
 public class BilleteraOperacionRequestDto {
 
-    @NotNull
-    private Long usuarioId;
+    @Id
+    @Column(name = "id", length = 36)
+    private String usuarioId;
 
-    @NotNull
-    @Positive
+
     private Double monto;
 }

@@ -4,7 +4,7 @@ import com.catedra.backend.compraventa.dto.OrdenCompraRequestDto;
 import com.catedra.backend.compraventa.dto.OrdenResponseDto;
 import com.catedra.backend.compraventa.dto.OrdenVentaRequestDto;
 import com.catedra.backend.compraventa.service.OrdenService;
-import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +22,16 @@ public class OrdenController {
 
     @PostMapping("/compra")
     public ResponseEntity<OrdenResponseDto> crearOrdenCompra(JwtAuthenticationToken jwt,
-                                                             @Valid @RequestBody OrdenCompraRequestDto requestDto) {
-        Long usuarioId = extraerUsuarioId(jwt);
+                                                              @RequestBody OrdenCompraRequestDto requestDto) {
+        String usuarioId = extraerUsuarioId(jwt);
         OrdenResponseDto response = ordenService.crearOrdenCompra(usuarioId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/venta")
     public ResponseEntity<OrdenResponseDto> crearOrdenVenta(JwtAuthenticationToken jwt,
-                                                            @Valid @RequestBody OrdenVentaRequestDto requestDto) {
-        Long usuarioId = extraerUsuarioId(jwt);
+                                                             @RequestBody OrdenVentaRequestDto requestDto) {
+        String usuarioId = extraerUsuarioId(jwt);
         OrdenResponseDto response = ordenService.crearOrdenVenta(usuarioId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -66,7 +66,7 @@ public class OrdenController {
         return ResponseEntity.ok(ordenService.cancelarOrden(id, "VENTA"));
     }
 
-    private Long extraerUsuarioId(JwtAuthenticationToken jwt) {
-        return Long.valueOf(jwt.getToken().getSubject());
+    private String extraerUsuarioId(JwtAuthenticationToken jwt) {
+        return jwt.getToken().getSubject();
     }
 }

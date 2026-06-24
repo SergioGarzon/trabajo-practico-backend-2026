@@ -2,11 +2,12 @@ package com.catedra.backend.compraventa.service;
 
 import com.catedra.backend.compraventa.client.CotizacionClient;
 import com.catedra.backend.compraventa.exception.CotizacionNoEncontradaException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 @Primary

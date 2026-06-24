@@ -2,7 +2,7 @@ package com.catedra.backend.compraventa.exception;
 
 public class BloqueoFondosException extends RuntimeException {
 
-    public BloqueoFondosException(Long usuarioId) {
+    public BloqueoFondosException(String usuarioId) {
         super("Error al bloquear fondos para el usuario: " + usuarioId);
     }
 }

@@ -1,0 +1,7 @@
+com/catedra/backend/compraventa/exception/MicroservicioFallaException.class
+com/catedra/backend/compraventa/entity/Orden.class
+com/catedra/backend/compraventa/config/FeignRequestInterceptor.class
+com/catedra/backend/compraventa/entity/OrdenVenta.class
+com/catedra/backend/compraventa/entity/Transaccion.class
+com/catedra/backend/compraventa/entity/enums/EstadoOrden.class
+com/catedra/backend/compraventa/entity/OrdenCompra.class

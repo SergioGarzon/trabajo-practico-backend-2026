@@ -25,7 +25,7 @@ public class OrdenService {
     private final EmparejamientoService emparejamientoService;
 
     @Transactional
-    public OrdenResponseDto crearOrdenCompra(Long usuarioId, OrdenCompraRequestDto requestDto) {
+    public OrdenResponseDto crearOrdenCompra(String usuarioId, OrdenCompraRequestDto requestDto) {
         OrdenCompra ordenCompra = new OrdenCompra();
         ordenCompra.setUsuarioId(usuarioId);
         ordenCompra.setSimboloAccion(requestDto.getSimboloAccion().toUpperCase());
@@ -46,7 +46,7 @@ public class OrdenService {
     }
 
     @Transactional
-    public OrdenResponseDto crearOrdenVenta(Long usuarioId, OrdenVentaRequestDto requestDto) {
+    public OrdenResponseDto crearOrdenVenta(String usuarioId, OrdenVentaRequestDto requestDto) {
         OrdenVenta ordenVenta = new OrdenVenta();
         ordenVenta.setUsuarioId(usuarioId);
         ordenVenta.setSimboloAccion(requestDto.getSimboloAccion().toUpperCase());

@@ -2,15 +2,25 @@ package com.catedra.backend.compraventa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+
 import lombok.EqualsAndHashCode;
+
+
 import lombok.NoArgsConstructor;
 
-@Data
+
+
 @NoArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "ordenes_venta")
 public class OrdenVenta extends Orden {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     private Long cantidadOriginal;
