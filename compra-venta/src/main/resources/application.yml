@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: compra-venta
+
+  datasource:
+    url: jdbc:h2:mem:compraventa_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/users-tp
+          jwk-set-uri: http://localhost:8080/realms/users-tp/protocol/openid-connect/certs
+
+server:
+  port: 8082
+
+servicios:
+  usuarios:
+    url: http://localhost:8081
+  cotizaciones:
+    url: http://localhost:8084

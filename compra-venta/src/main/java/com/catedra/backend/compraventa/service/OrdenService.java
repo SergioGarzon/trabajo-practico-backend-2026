@@ -25,9 +25,9 @@ public class OrdenService {
     private final EmparejamientoService emparejamientoService;
 
     @Transactional
-    public OrdenResponseDto crearOrdenCompra(OrdenCompraRequestDto requestDto) {
+    public OrdenResponseDto crearOrdenCompra(Long usuarioId, OrdenCompraRequestDto requestDto) {
         OrdenCompra ordenCompra = new OrdenCompra();
-        ordenCompra.setUsuarioId(requestDto.getUsuarioId());
+        ordenCompra.setUsuarioId(usuarioId);
         ordenCompra.setSimboloAccion(requestDto.getSimboloAccion().toUpperCase());
         ordenCompra.setPrecioPorAccion(requestDto.getPrecioPorAccion());
         ordenCompra.setCantidadPedida(requestDto.getCantidadPedida());
@@ -46,9 +46,9 @@ public class OrdenService {
     }
 
     @Transactional
-    public OrdenResponseDto crearOrdenVenta(OrdenVentaRequestDto requestDto) {
+    public OrdenResponseDto crearOrdenVenta(Long usuarioId, OrdenVentaRequestDto requestDto) {
         OrdenVenta ordenVenta = new OrdenVenta();
-        ordenVenta.setUsuarioId(requestDto.getUsuarioId());
+        ordenVenta.setUsuarioId(usuarioId);
         ordenVenta.setSimboloAccion(requestDto.getSimboloAccion().toUpperCase());
         ordenVenta.setPrecioPorAccion(requestDto.getPrecioPorAccion());
         ordenVenta.setCantidadOriginal(requestDto.getCantidadOriginal());

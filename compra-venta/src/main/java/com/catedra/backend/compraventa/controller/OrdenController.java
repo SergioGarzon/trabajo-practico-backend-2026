@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +21,18 @@ public class OrdenController {
     private final OrdenService ordenService;
 
     @PostMapping("/compra")
-    public ResponseEntity<OrdenResponseDto> crearOrdenCompra(@Valid @RequestBody OrdenCompraRequestDto requestDto) {
-        OrdenResponseDto response = ordenService.crearOrdenCompra(requestDto);
+    public ResponseEntity<OrdenResponseDto> crearOrdenCompra(JwtAuthenticationToken jwt,
+                                                             @Valid @RequestBody OrdenCompraRequestDto requestDto) {
+        Long usuarioId = extraerUsuarioId(jwt);
+        OrdenResponseDto response = ordenService.crearOrdenCompra(usuarioId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/venta")
-    public ResponseEntity<OrdenResponseDto> crearOrdenVenta(@Valid @RequestBody OrdenVentaRequestDto requestDto) {
-        OrdenResponseDto response = ordenService.crearOrdenVenta(requestDto);
+    public ResponseEntity<OrdenResponseDto> crearOrdenVenta(JwtAuthenticationToken jwt,
+                                                            @Valid @RequestBody OrdenVentaRequestDto requestDto) {
+        Long usuarioId = extraerUsuarioId(jwt);
+        OrdenResponseDto response = ordenService.crearOrdenVenta(usuarioId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -59,5 +64,9 @@ public class OrdenController {
     @PatchMapping("/venta/{id}/cancelar")
     public ResponseEntity<OrdenResponseDto> cancelarOrdenVenta(@PathVariable Long id) {
         return ResponseEntity.ok(ordenService.cancelarOrden(id, "VENTA"));
+    }
+
+    private Long extraerUsuarioId(JwtAuthenticationToken jwt) {
+        return Long.valueOf(jwt.getToken().getSubject());
     }
 }

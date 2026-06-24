@@ -35,6 +35,20 @@ public class TransaccionService {
                 .toList();
     }
 
+    public List<TransaccionResponseDto> listarTransaccionesPorUsuario(Long usuarioId) {
+        return transaccionRepository.findByUsuarioId(usuarioId)
+                .stream()
+                .map(this::mapearAResponse)
+                .toList();
+    }
+
+    public List<TransaccionResponseDto> listarTodasLasTransacciones() {
+        return transaccionRepository.findAllOrderByFechaDesc()
+                .stream()
+                .map(this::mapearAResponse)
+                .toList();
+    }
+
     private TransaccionResponseDto mapearAResponse(Transaccion transaccion) {
         TransaccionResponseDto dto = new TransaccionResponseDto();
         dto.setId(transaccion.getId());

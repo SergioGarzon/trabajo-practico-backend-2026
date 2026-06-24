@@ -48,6 +48,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(MicroservicioFallaException.class)
+    public ResponseEntity<Map<String, Object>> handleMicroservicioFalla(MicroservicioFallaException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_GATEWAY);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
         StringBuilder mensajes = new StringBuilder();

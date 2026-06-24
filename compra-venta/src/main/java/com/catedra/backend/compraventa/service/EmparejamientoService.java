@@ -37,13 +37,11 @@ public class EmparejamientoService {
 
         bloquearFondosComprador(ordenCompra.getUsuarioId(), montoTotal);
 
-        List<OrdenVenta> ventasCompatibles = ordenVentaRepository
-                .findBySimboloAccionAndPrecioPorAccionLessThanEqualAndEstadoInAndCantidadRestanteGreaterThanOrderByPrecioPorAccionAsc(
-                        ordenCompra.getSimboloAccion(),
-                        ordenCompra.getPrecioPorAccion(),
-                        List.of(EstadoOrden.PENDIENTE, EstadoOrden.PARCIAL),
-                        0L
-                );
+        List<OrdenVenta> ventasCompatibles = ordenVentaRepository.findVentasCompatibles(
+                ordenCompra.getSimboloAccion(),
+                ordenCompra.getPrecioPorAccion(),
+                List.of(EstadoOrden.PENDIENTE, EstadoOrden.PARCIAL)
+        );
 
         if (ventasCompatibles.isEmpty()) {
             throw new SinContraparteException(ordenCompra.getSimboloAccion());
@@ -59,13 +57,11 @@ public class EmparejamientoService {
 
     @Transactional
     public void procesarOrdenVenta(OrdenVenta ordenVenta) {
-        List<OrdenCompra> comprasCompatibles = ordenCompraRepository
-                .findBySimboloAccionAndPrecioPorAccionGreaterThanEqualAndEstadoInAndCantidadRestanteGreaterThanOrderByPrecioPorAccionDesc(
-                        ordenVenta.getSimboloAccion(),
-                        ordenVenta.getPrecioPorAccion(),
-                        List.of(EstadoOrden.PENDIENTE, EstadoOrden.PARCIAL),
-                        0L
-                );
+        List<OrdenCompra> comprasCompatibles = ordenCompraRepository.findComprasCompatibles(
+                ordenVenta.getSimboloAccion(),
+                ordenVenta.getPrecioPorAccion(),
+                List.of(EstadoOrden.PENDIENTE, EstadoOrden.PARCIAL)
+        );
 
         if (comprasCompatibles.isEmpty()) {
             return;
@@ -123,12 +119,12 @@ public class EmparejamientoService {
     }
 
     private void resolverFondosComprador(Long usuarioId, Double monto) {
-        billeteraClient.resolverFondos(new BilleteraOperacionRequestDto(usuarioId, monto));
+        billeteraClient.resolverOperacion(new BilleteraOperacionRequestDto(usuarioId, monto));
     }
 
     private void transferirAcciones(Long vendedorId, Long compradorId, String simboloAccion, Long cantidad) {
-        portfolioClient.descontarAcciones(new PortfolioOperacionRequestDto(vendedorId, simboloAccion, cantidad));
-        portfolioClient.agregarAcciones(new PortfolioOperacionRequestDto(compradorId, simboloAccion, cantidad));
+        portfolioClient.actualizarTenencia(new PortfolioOperacionRequestDto(vendedorId, simboloAccion, -cantidad));
+        portfolioClient.actualizarTenencia(new PortfolioOperacionRequestDto(compradorId, simboloAccion, cantidad));
     }
 
     private void actualizarEstadoOrden(OrdenCompra orden) {
