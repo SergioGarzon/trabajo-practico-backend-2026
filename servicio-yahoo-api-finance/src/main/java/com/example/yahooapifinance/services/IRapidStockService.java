@@ -1,6 +1,8 @@
 package com.example.yahooapifinance.services;
 
+import java.math.BigDecimal;
+
 public interface IRapidStockService {
 
-	public String getStockDataFromRapidApi(String symbol);
+	BigDecimal getStockDataFromRapidApi(String symbol);
 }
