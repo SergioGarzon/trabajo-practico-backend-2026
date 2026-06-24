@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
+import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 import com.utnfrc.usuario_portfolios.models.Usuarios;
 import com.utnfrc.usuario_portfolios.repositories.UsuariosRepositories;
 
@@ -24,6 +25,12 @@ public class UsuariosServices {
 
     public Optional<Usuarios> getById(String userID) {
         return repo.findById(userID);
+    }
+
+    public Usuarios getByNumericId(Long numericId) {
+        return repo.findByDni(numericId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Usuario con ID numerico " + numericId + " no encontrado."));
     }
 
     public Usuarios update(String userID, Usuarios usuario) {
