@@ -9,7 +9,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/billetera")
@@ -21,7 +23,6 @@ public class BilleteraVirtualController {
         this.billeteraVirtualService = billeteraVirtualService;
     }
 
-    // Se crea una biiletera asociada al usuario, se usa el id del JWT para mayor seguridad
 
     @PostMapping("/crear")
     public ResponseEntity<BilleteraVirtual> crearBilleteraVirtual(
@@ -37,15 +38,6 @@ public class BilleteraVirtualController {
         billeteraVirtualService.findAllBV();
         return ResponseEntity.ok().body(billeteraVirtualService.findAllBV());
     }
-
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> eliminarBilleteraVirtual(@PathVariable("id") Long id) {
-//        if (!billeteraVirtualService.findBVById(id).isPresent()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        billeteraVirtualService.deleteBV(id);
-//        return ResponseEntity.noContent().build();
-//    }
 
     @PutMapping("/retirar")
     public ResponseEntity<BilleteraVirtual> retirarDinero(
@@ -71,18 +63,18 @@ public class BilleteraVirtualController {
 
 
     @PutMapping("/operacion/bloquear")
-    public ResponseEntity<String> iniciarOperacion(
+    public ResponseEntity<Map<String, String>> iniciarOperacion(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody SolicitudDineroDTO dto) {
 
         String userId = jwt.getSubject();
-        boolean exitoso = billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto());
+        String idTransaccion = billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto());
 
-        if (exitoso) {
-            return ResponseEntity.ok("Dinero bloqueado exitosamente. Esperando resolución externa.");
-        } else {
-            return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body("Saldo insuficiente en billetera.");
-        }
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("idTransaccion", idTransaccion);
+        respuesta.put("mensaje", "Dinero bloqueado. Guarde este ID para la resolución.");
+
+        return ResponseEntity.ok(respuesta);
     }
 
 
@@ -92,9 +84,11 @@ public class BilleteraVirtualController {
             @RequestBody SolicitudDineroDTO dto) {
 
         String userId = jwt.getSubject();
-        BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna(userId, dto);
+        BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna( dto                                               );
 
         return ResponseEntity.ok(bvActualizada);
     }
+
+
 
 }

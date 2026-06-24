@@ -15,7 +15,6 @@ public class ErrorResponse {
         this.timestamp = LocalDateTime.now();
     }
 
-    // Getters y Setters (puedes usar Lombok si lo tenés en tu proyecto)
     public int getStatus() { return status; }
     public String getError() { return error; }
     public String getMessage() { return message; }

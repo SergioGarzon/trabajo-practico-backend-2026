@@ -27,7 +27,7 @@ public class UsuariosServices {
     }
 
     public Usuarios update(String userID, Usuarios usuario) {
-        // ensure the entity has the right id
+
         return repo.save(usuario);
     }
 

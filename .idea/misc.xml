@@ -6,6 +6,8 @@
       <list>
         <option value="$PROJECT_DIR$/usuarios-portfolios/pom.xml" />
         <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/servicio-emparejamiento-ordenes-compra-venta/pom.xml" />
+        <option value="$PROJECT_DIR$/servicio-yahoo-api-finance/pom.xml" />
       </list>
     </option>
   </component>
