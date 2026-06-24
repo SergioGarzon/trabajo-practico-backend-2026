@@ -15,7 +15,6 @@ public class PortfolioService {
     @Autowired
     private PortfolioRepository repo;
 
-    // Buscar portfolio por id (recibe String, convierte a Long)
     public Portfolio findPortfolioById(String id) {
         try {
             Long lid = Long.parseLong(id);
@@ -33,7 +32,6 @@ public class PortfolioService {
         }
     }
 
-    // Buscar un ItemPortfolio dentro de un portfolio por simbolo (case-insensitive)
     public ItemPortfolio findItemBySimbolo(Portfolio portfolio, String simbolo) {
         if (portfolio == null || simbolo == null) return null;
         for (ItemPortfolio item : portfolio.getItems()) {
@@ -45,7 +43,6 @@ public class PortfolioService {
         return null;
     }
 
-    // Agregar una accion al portfolio: si no existe se agrega, si existe se suma la cantidad
     public Portfolio agregarAccion(String portfolioId, Accion accion, Long cantidad) {
         if (accion == null || cantidad == null || cantidad <= 0) {
             throw new IllegalArgumentException("Accion y cantidad validas son requeridas");
@@ -64,9 +61,7 @@ public class PortfolioService {
         return repo.save(p);
     }
 
-    // Restar una cantidad de una accion en el portfolio
-    // Si la cantidad a restar es mayor a la disponible se cancela (lanza excepción)
-    // Si la cantidad queda en 0 se elimina del portfolio
+
     public Portfolio restarAccion(String portfolioId, String simbolo, Long cantidadARestar) {
         if (simbolo == null || cantidadARestar == null || cantidadARestar <= 0) {
             throw new IllegalArgumentException("Simbolo y cantidad a restar validos son requeridos");

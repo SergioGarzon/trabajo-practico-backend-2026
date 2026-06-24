@@ -13,9 +13,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Desactivamos CSRF porque usamos tokens
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // ¡IMPORTANTE! Dejamos el registro público para no pedir token al crear usuario
                         .requestMatchers("/api/usuarios/registro").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/ventas").permitAll()

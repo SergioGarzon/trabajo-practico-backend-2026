@@ -10,10 +10,10 @@ import java.io.Serializable;
 public class Usuarios implements Serializable {
 
     @Id
-    @Column(name = "id", length = 36) // Clave primaria asignada por el UUID de Keycloak
+    @Column(name = "id", length = 36)
     private String id;
 
-    private Long dni; // El DNI pasa a ser un atributo normal muy importante
+    private Long dni;
 
     private String nombre;
     private String apellido;
@@ -33,7 +33,6 @@ public class Usuarios implements Serializable {
     public Usuarios() {
     }
 
-    // Getters y Setters actualizados
     public String getId() {
         return id;
     }

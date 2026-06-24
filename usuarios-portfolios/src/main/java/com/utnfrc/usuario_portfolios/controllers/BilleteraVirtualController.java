@@ -23,7 +23,6 @@ public class BilleteraVirtualController {
         this.billeteraVirtualService = billeteraVirtualService;
     }
 
-    // Se crea una biiletera asociada al usuario, se usa el id del JWT para mayor seguridad
 
     @PostMapping("/crear")
     public ResponseEntity<BilleteraVirtual> crearBilleteraVirtual(
@@ -39,15 +38,6 @@ public class BilleteraVirtualController {
         billeteraVirtualService.findAllBV();
         return ResponseEntity.ok().body(billeteraVirtualService.findAllBV());
     }
-
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> eliminarBilleteraVirtual(@PathVariable("id") Long id) {
-//        if (!billeteraVirtualService.findBVById(id).isPresent()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        billeteraVirtualService.deleteBV(id);
-//        return ResponseEntity.noContent().build();
-//    }
 
     @PutMapping("/retirar")
     public ResponseEntity<BilleteraVirtual> retirarDinero(

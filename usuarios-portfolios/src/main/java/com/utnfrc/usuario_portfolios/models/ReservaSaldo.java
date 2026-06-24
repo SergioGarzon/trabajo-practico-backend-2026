@@ -8,8 +8,7 @@ import java.util.UUID;
 public class ReservaSaldo {
 
     @Id
-    private String id; // Usaremos un UUID convertido a String
-
+    private String id;
     private Long monto;
 
     private String estado; // "PENDIENTE", "CONFIRMADA", "RECHAZADA"
@@ -18,7 +17,7 @@ public class ReservaSaldo {
     @JoinColumn(name = "billetera_id")
     private BilleteraVirtual billetera;
 
-    // Constructor que autogenera el UUID al crear la reserva
+
     public ReservaSaldo() {
         this.id = UUID.randomUUID().toString();
         this.estado = "PENDIENTE";

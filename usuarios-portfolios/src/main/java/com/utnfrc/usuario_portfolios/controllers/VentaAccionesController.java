@@ -24,9 +24,7 @@ public class VentaAccionesController {
     public VentaAccionesController(VentaAccionesService ventaAccionesService) {
         this.ventaAccionesService = ventaAccionesService;
     }
-    /**
-     * FASE 1: El usuario pide iniciar una venta (Se bloquean sus acciones)
-     */
+
     @PostMapping("/iniciar")
     public ResponseEntity<Map<String, String>> iniciarVenta(
             @AuthenticationPrincipal Jwt jwt,
@@ -42,9 +40,6 @@ public class VentaAccionesController {
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
 
-    /**
-     * FASE 2: El motor externo de emparejamiento avisa que se concretó una venta (parcial o total)
-     */
     @PutMapping("/procesar")
     public ResponseEntity<Map<String, String>> procesarVenta(
             @RequestBody ResolucionVentaDTO dto) {
@@ -57,9 +52,6 @@ public class VentaAccionesController {
         return ResponseEntity.ok(respuesta);
     }
 
-    /**
-     * EXTRA: El usuario se arrepiente y cancela la orden de venta (Se liberan las acciones retenidas)
-     */
     @PutMapping("/cancelar/{idOrden}")
     public ResponseEntity<Map<String, String>> cancelarVenta(
             @PathVariable String idOrden) {

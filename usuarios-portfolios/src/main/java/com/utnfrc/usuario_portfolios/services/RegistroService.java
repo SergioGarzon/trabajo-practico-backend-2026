@@ -21,7 +21,7 @@ public class RegistroService {
     private final UsuariosRepositories usuarioRepository;
     private final BilleteraVirtualService billeteraService;
 
-    private final String REALM_NAME = "users-tp"; // El nombre de tu Reino
+    private final String REALM_NAME = "users-tp";
 
     public RegistroService(Keycloak keycloak, UsuariosRepositories usuarioRepository, BilleteraVirtualService billeteraService) {
         this.keycloak = keycloak;
@@ -29,10 +29,9 @@ public class RegistroService {
         this.billeteraService = billeteraService;
     }
 
-    @Transactional // Asegura que si falla la escritura en MySQL, se aplique un rollback local
+    @Transactional
     public Usuarios registrarUsuarioCompleto(RegistroDTO dto) {
 
-        // 1. DEFINIR EL USUARIO PARA KEYCLOAK
         UserRepresentation userRep = new UserRepresentation();
         userRep.setUsername(dto.getUsername());
         userRep.setEmail(dto.getEmail());
@@ -41,14 +40,12 @@ public class RegistroService {
 
         userRep.setEnabled(true);
 
-        // Configurar la contraseña
         CredentialRepresentation cred = new CredentialRepresentation();
         cred.setType(CredentialRepresentation.PASSWORD);
         cred.setValue(dto.getPassword());
-        cred.setTemporary(false); // Fijo, para que no pida cambiarla al iniciar
+        cred.setTemporary(false);
         userRep.setCredentials(List.of(cred));
 
-        // 2. ENVIAR ORDEN DE CREACIÓN AL REINO
         Response response = keycloak.realm(REALM_NAME).users().create(userRep);
 
         if (response.getStatus() == 409) {
@@ -57,22 +54,16 @@ public class RegistroService {
             throw new RuntimeException("Error al crear usuario en Keycloak. Código de estado: " + response.getStatus());
         }
 
-        // 3. OBTENER EL UUID ASIGNADO POR KEYCLOAK
-        // Keycloak retorna la URI del nuevo usuario en el header 'Location' (ej: /users/e3b24f11-...)
         String path = response.getLocation().getPath();
         String userIdUuid = path.substring(path.lastIndexOf("/") + 1);
 
-        // 4. ASIGNAR EL ROL DENTRO DEL REINO
-        // Buscamos la representación del rol que vino en el DTO (ej: "USER" o "ADMIN") dentro del Reino
         RoleRepresentation roleRep = keycloak.realm(REALM_NAME).roles().get(dto.getRol()).toRepresentation();
 
-        // Apuntamos al recurso del usuario específico mediante su UUID y le asociamos el rol
         UserResource userResource = keycloak.realm(REALM_NAME).users().get(userIdUuid);
         userResource.roles().realmLevel().add(List.of(roleRep));
 
-        // 5. GUARDAR LOCALMENTE EN TU MICROSERVICIO (MYSQL)
         Usuarios nuevoUsuario = new Usuarios();
-        nuevoUsuario.setId(userIdUuid); // Reemplazamos el Long secuencial por el String UUID de Keycloak
+        nuevoUsuario.setId(userIdUuid);
         nuevoUsuario.setNombre(dto.getNombre());
         nuevoUsuario.setDni(dto.getDni());
         nuevoUsuario.setApellido(dto.getApellido());
