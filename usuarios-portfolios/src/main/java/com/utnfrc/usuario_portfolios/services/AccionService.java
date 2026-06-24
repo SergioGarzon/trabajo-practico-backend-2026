@@ -37,15 +37,15 @@ public class AccionService {
         return repo.save(accion);
     }
 
+    public List<Accion> buscarTodos() {return repo.findAll();}
+
     @Transactional
     public List<Accion> sincronizarAcciones() {
 
-        // 1. Definir la URL del otro microservicio (o apuntar al API Gateway)
-        // Reemplazá con el puerto y la ruta real del servicio que tiene las acciones
-        String urlServicioExterno = "http://localhost:8082/api/acciones-disponibles";
+        // Ajustá el final de esta URL al endpoint exacto que hayas creado en tu servicio mock
+        // Según tu Gateway, la ruta base es /servidormock/api/v1/
+        String urlServicioExterno = "http://localhost:8084/servidormock/api/v1/stocks/all-stocks";
 
-        // 2. Hacer la petición GET.
-        // Como devuelve una lista/array de objetos, lo mapeamos a un Array del DTO.
         ResponseEntity<AccionExternaDTO[]> response = restTemplate.getForEntity(
                 urlServicioExterno,
                 AccionExternaDTO[].class
@@ -56,16 +56,14 @@ public class AccionService {
             List<Accion> nuevasAccionesAGuardar = new ArrayList<>();
             AccionExternaDTO[] accionesRecibidas = response.getBody();
 
-            // 3. Iterar sobre la respuesta y mapear a Entidad
             for (AccionExternaDTO dto : accionesRecibidas) {
 
-                // CONTROL DEFENSIVO: Verificamos que el símbolo no exista ya en la BD
-                // (Asumiendo que tenés un Optional<Accion> findBySimbolo(String simbolo) en tu Repositorio)
+                // Verificamos que no exista en la BD para no duplicar (ej: "NVDA")
                 if (repo.findBySimbolo(dto.getSimbolo()).isEmpty()) {
 
                     Accion nuevaAccion = new Accion();
-                    nuevaAccion.setNombre(dto.getNombre());
-                    nuevaAccion.setSimbolo(dto.getSimbolo());
+                    nuevaAccion.setNombre(dto.getNombre()); // Ahora se mapea correctamente desde "name"
+                    nuevaAccion.setSimbolo(dto.getSimbolo()); // Ahora se mapea correctamente desde "symbol"
 
                     nuevasAccionesAGuardar.add(nuevaAccion);
                 }
@@ -74,7 +72,7 @@ public class AccionService {
             if (!nuevasAccionesAGuardar.isEmpty()) {
                 return repo.saveAll(nuevasAccionesAGuardar);
             } else {
-                return new ArrayList<>(); // No hubo acciones nuevas para guardar
+                return new ArrayList<>(); // Todo estaba sincronizado
             }
 
         } else {
@@ -82,5 +80,4 @@ public class AccionService {
         }
     }
 }
-
 

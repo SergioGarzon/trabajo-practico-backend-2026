@@ -1,7 +1,11 @@
 package com.utnfrc.usuario_portfolios.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AccionExternaDTO {
+    @JsonProperty("name")
     private String nombre;
+    @JsonProperty("symbol")
     private String simbolo;
 
     // Getters y Setters

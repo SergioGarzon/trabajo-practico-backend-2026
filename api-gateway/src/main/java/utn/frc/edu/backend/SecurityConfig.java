@@ -24,7 +24,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         // REQUERIMIENTO OBLIGATORIO: La consulta de acciones es de ACCESO PÚBLICO
                         .pathMatchers("/servidormock/api/v1/stocks/**").permitAll()
-
+                        .pathMatchers("/api/usuarios/registro").permitAll()
+                        .pathMatchers("/api/ventas/iniciar").permitAll()
                         // Cualquier otra ruta protegida exige token válido de Keycloak
                         .anyExchange().authenticated()
                 )

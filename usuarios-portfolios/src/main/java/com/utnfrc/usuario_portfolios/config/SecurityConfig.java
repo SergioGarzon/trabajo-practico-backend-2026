@@ -18,6 +18,7 @@ public class SecurityConfig {
                         // ¡IMPORTANTE! Dejamos el registro público para no pedir token al crear usuario
                         .requestMatchers("/api/usuarios/registro").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/api/ventas").permitAll()
                         // Cualquier otra petición (como ingresar dinero) exige token válido
                         .anyRequest().authenticated()
                 )
