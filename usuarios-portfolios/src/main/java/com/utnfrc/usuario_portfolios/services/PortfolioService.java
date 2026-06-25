@@ -4,7 +4,6 @@ import com.utnfrc.usuario_portfolios.models.Accion;
 import com.utnfrc.usuario_portfolios.models.ItemPortfolio;
 import com.utnfrc.usuario_portfolios.models.Portfolio;
 import com.utnfrc.usuario_portfolios.repositories.PortfolioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
@@ -12,8 +11,11 @@ import java.util.Iterator;
 @Service
 public class PortfolioService {
 
-    @Autowired
-    private PortfolioRepository repo;
+    private final PortfolioRepository repo;
+
+    public PortfolioService(PortfolioRepository repo) {
+        this.repo = repo;
+    }
 
     public Portfolio findPortfolioById(String id) {
         try {

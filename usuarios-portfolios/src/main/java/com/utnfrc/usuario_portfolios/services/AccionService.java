@@ -2,7 +2,6 @@ package com.utnfrc.usuario_portfolios.services;
 
 import com.utnfrc.usuario_portfolios.models.Accion;
 import com.utnfrc.usuario_portfolios.repositories.AccionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.utnfrc.usuario_portfolios.dtos.AccionExternaDTO;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +14,13 @@ import java.util.List;
 @Service
 public class AccionService {
 
-    @Autowired
-    private AccionRepository repo;
-    @Autowired
-    private RestTemplate restTemplate;
+    private final AccionRepository repo;
+    private final RestTemplate restTemplate;
+
+    public AccionService(AccionRepository repo, RestTemplate restTemplate) {
+        this.repo = repo;
+        this.restTemplate = restTemplate;
+    }
 
     public Accion buscarPorSimbolo(String simbolo) {
         if (simbolo == null) return null;

@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -18,11 +17,13 @@ import com.utnfrc.usuario_portfolios.services.RegistroService;
 @RequestMapping("/api/usuarios")
 public class UsuariosControllers {
 
-    @Autowired
-    private UsuariosServices service;
+    private final UsuariosServices service;
+    private final RegistroService registroService;
 
-    @Autowired
-    private RegistroService registroService;
+    public UsuariosControllers(UsuariosServices service, RegistroService registroService) {
+        this.service = service;
+        this.registroService = registroService;
+    }
 
     @PostMapping("/registro")
     public ResponseEntity<Usuarios> create(@RequestBody RegistroDTO dto) {

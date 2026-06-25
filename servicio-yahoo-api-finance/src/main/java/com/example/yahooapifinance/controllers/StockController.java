@@ -1,7 +1,6 @@
 package com.example.yahooapifinance.controllers;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +22,13 @@ import com.example.yahooapifinance.models.StockJSON;
 @RequestMapping("/stocks")
 public class StockController {
 
-	@Lazy
-	@Autowired
-	private IRapidStockService rapidStockService;
-	
-	@Lazy
-	@Autowired
-	private IStockServiceJSON stockServiceJSON; 
+	private final IRapidStockService rapidStockService;
+	private final IStockServiceJSON stockServiceJSON;
+
+	public StockController(@Lazy IRapidStockService rapidStockService, @Lazy IStockServiceJSON stockServiceJSON) {
+		this.rapidStockService = rapidStockService;
+		this.stockServiceJSON = stockServiceJSON;
+	}
 	
 	private final static Logger logger = (Logger) LoggerFactory.getLogger(StockController.class);
 

@@ -19,14 +19,12 @@ public class RegistroService {
 
     private final Keycloak keycloak;
     private final UsuariosRepositories usuarioRepository;
-    private final BilleteraVirtualService billeteraService;
 
     private final String REALM_NAME = "users-tp";
 
-    public RegistroService(Keycloak keycloak, UsuariosRepositories usuarioRepository, BilleteraVirtualService billeteraService) {
+    public RegistroService(Keycloak keycloak, UsuariosRepositories usuarioRepository) {
         this.keycloak = keycloak;
         this.usuarioRepository = usuarioRepository;
-        this.billeteraService = billeteraService;
     }
 
     @Transactional
