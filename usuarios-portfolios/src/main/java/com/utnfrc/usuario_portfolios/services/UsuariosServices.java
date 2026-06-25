@@ -1,6 +1,7 @@
 package com.utnfrc.usuario_portfolios.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,11 +11,8 @@ import com.utnfrc.usuario_portfolios.repositories.UsuariosRepositories;
 @Service
 public class UsuariosServices {
 
-    private final UsuariosRepositories repo;
-
-    public UsuariosServices(UsuariosRepositories repo) {
-        this.repo = repo;
-    }
+    @Autowired
+    private UsuariosRepositories repo;
 
     public Usuarios create(Usuarios usuario) {
         return repo.save(usuario);

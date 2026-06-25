@@ -2,7 +2,9 @@ package com.utnfrc.usuario_portfolios.controllers;
 
 import com.utnfrc.usuario_portfolios.dtos.ResolucionVentaDTO;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudVentaDTO;
+import com.utnfrc.usuario_portfolios.repositories.OrdenVentaRepository;
 import com.utnfrc.usuario_portfolios.services.VentaAccionesService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,6 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/ventas")
 public class VentaAccionesController {
 
+    @Autowired
     private final VentaAccionesService ventaAccionesService;
 
     public VentaAccionesController(VentaAccionesService ventaAccionesService) {

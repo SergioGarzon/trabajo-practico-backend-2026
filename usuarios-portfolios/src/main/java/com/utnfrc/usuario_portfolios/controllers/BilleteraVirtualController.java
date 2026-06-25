@@ -3,6 +3,7 @@ package com.utnfrc.usuario_portfolios.controllers;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudDineroDTO;
 import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
 import com.utnfrc.usuario_portfolios.services.BilleteraVirtualService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -82,7 +83,8 @@ public class BilleteraVirtualController {
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody SolicitudDineroDTO dto) {
 
-        BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna(dto);
+        String userId = jwt.getSubject();
+        BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna( dto                                               );
 
         return ResponseEntity.ok(bvActualizada);
     }

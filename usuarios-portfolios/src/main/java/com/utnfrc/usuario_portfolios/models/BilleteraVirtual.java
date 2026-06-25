@@ -1,6 +1,7 @@
 package com.utnfrc.usuario_portfolios.models;
 
 import com.utnfrc.usuario_portfolios.excepciones.SaldoInsuficienteException;
+import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonBackReference;

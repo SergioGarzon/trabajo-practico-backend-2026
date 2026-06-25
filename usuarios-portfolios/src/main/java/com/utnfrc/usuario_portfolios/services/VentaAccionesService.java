@@ -7,6 +7,7 @@ import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
 import com.utnfrc.usuario_portfolios.models.*;
 import com.utnfrc.usuario_portfolios.repositories.*;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +18,8 @@ public class VentaAccionesService {
     private final BilleteraVirtualRepository billeteraRepository;
     private final PortfolioRepository portfolioRepository;
 
+    @Autowired
+    private PortfolioService portfolioService;
 
     public VentaAccionesService(UsuariosServices usuariosServices, OrdenVentaRepository ordenVentaRepository, BilleteraVirtualRepository billeteraRepository, PortfolioRepository portfolioRepository) {
         this.usuariosServices = usuariosServices;

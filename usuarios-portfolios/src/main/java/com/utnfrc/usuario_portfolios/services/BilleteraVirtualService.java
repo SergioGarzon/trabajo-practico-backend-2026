@@ -7,6 +7,7 @@ import com.utnfrc.usuario_portfolios.repositories.BilleteraVirtualRepository;
 import com.utnfrc.usuario_portfolios.repositories.ReservaSaldoRepository;
 import com.utnfrc.usuario_portfolios.repositories.UsuariosRepositories;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -22,15 +23,16 @@ public class BilleteraVirtualService {
     private final UsuariosRepositories usuariosRepositories;
     private final ReservaSaldoRepository reservaRepository;
     private final PortfolioService portfolioService;
-    private final AccionService accionService;
 
-    public BilleteraVirtualService(UsuariosServices usuariosService, PortfolioService portfolioService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository, AccionService accionService) {
+    @Autowired
+    private AccionService accionService;
+
+    public BilleteraVirtualService(UsuariosServices usuariosService, PortfolioService portfolioService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository) {
         this.usuariosRepositories = usuariosRepositories;
         this.usuariosService = usuariosService;
         this.bvRepository = bvRepository;
         this.reservaRepository = reservaRepository;
         this.portfolioService = portfolioService;
-        this.accionService = accionService;
     }
 
     @Transactional
