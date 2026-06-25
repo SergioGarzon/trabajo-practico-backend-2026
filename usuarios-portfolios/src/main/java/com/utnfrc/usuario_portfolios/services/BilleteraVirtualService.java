@@ -22,15 +22,17 @@ public class BilleteraVirtualService {
     private final SecureRandom random = new SecureRandom();
     private final UsuariosRepositories usuariosRepositories;
     private final ReservaSaldoRepository reservaRepository;
+    private final PortfolioService portfolioService;
 
     @Autowired
     private AccionService accionService;
 
-    public BilleteraVirtualService(UsuariosServices usuariosService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository) {
+    public BilleteraVirtualService(UsuariosServices usuariosService, PortfolioService portfolioService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository) {
         this.usuariosRepositories = usuariosRepositories;
         this.usuariosService = usuariosService;
         this.bvRepository = bvRepository;
         this.reservaRepository = reservaRepository;
+        this.portfolioService = portfolioService;
     }
 
     @Transactional
@@ -89,8 +91,6 @@ public class BilleteraVirtualService {
     }
 
 
-
-
     @Transactional
     public String solicitarYBloquearDinero(String keycloakUserId, Long monto) {
         BilleteraVirtual bv = bvRepository.findByUsuario_Id(keycloakUserId)
@@ -120,9 +120,6 @@ public class BilleteraVirtualService {
         ReservaSaldo reserva = reservaRepository.findById(dto.getIdTransaccion())
                 .orElseThrow(() -> new ResourceNotFoundException("La transacción de bloqueo no existe."));
 
-        if (!"PENDIENTE".equals(reserva.getEstado())) {
-            throw new IllegalStateException("Esta transacción ya fue procesada anteriormente.");
-        }
 
         BilleteraVirtual bv = reserva.getBilletera();
         Long monto = reserva.getMonto();
@@ -131,6 +128,9 @@ public class BilleteraVirtualService {
 
         if ("CONFIRMAR".equalsIgnoreCase(dto.getEstadoAccion())) {
             bv.setDineroInvertido(bv.getDineroInvertido() + monto);
+            Portfolio portID = bv.getUsuario().getPortfolio();
+            Accion accion = accionService.buscarPorSimbolo(dto.getEstadoAccion());
+            portfolioService.agregarAccion(portID.getId(), accion, dto.getCantidad());
             reserva.setEstado("CONFIRMADA");
         } else if ("RECHAZAR".equalsIgnoreCase(dto.getEstadoAccion())) {
             bv.setDineroLibre(bv.getDineroLibre() + monto);

@@ -43,7 +43,7 @@ public class PortfolioService {
         return null;
     }
 
-    public Portfolio agregarAccion(String portfolioId, Accion accion, Long cantidad) {
+    public Portfolio agregarAccion(Long portfolioId, Accion accion, Long cantidad) {
         if (accion == null || cantidad == null || cantidad <= 0) {
             throw new IllegalArgumentException("Accion y cantidad validas son requeridas");
         }

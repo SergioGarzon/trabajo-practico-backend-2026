@@ -7,6 +7,7 @@ import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
 import com.utnfrc.usuario_portfolios.models.*;
 import com.utnfrc.usuario_portfolios.repositories.*;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,9 @@ public class VentaAccionesService {
     private final OrdenVentaRepository ordenVentaRepository;
     private final BilleteraVirtualRepository billeteraRepository;
     private final PortfolioRepository portfolioRepository;
+
+    @Autowired
+    private PortfolioService portfolioService;
 
     public VentaAccionesService(UsuariosServices usuariosServices, OrdenVentaRepository ordenVentaRepository, BilleteraVirtualRepository billeteraRepository, PortfolioRepository portfolioRepository) {
         this.usuariosServices = usuariosServices;
@@ -66,6 +70,10 @@ public class VentaAccionesService {
 
         if (orden.getEstado().equals("COMPLETADA") || orden.getEstado().equals("CANCELADA")) {
             throw new TransaccionInversionException("Esta orden ya está cerrada o cancelada.");
+        }
+
+        if (orden.getCantidadRestante() < dto.getCantidadVendida()){
+            throw new TransaccionInversionException("Estas intentado vender mas de lo que tiene");
         }
 
         ItemPortfolio item = orden.getItemPortfolio();

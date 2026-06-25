@@ -42,24 +42,24 @@ services:
       - tp-network
     restart: unless-stopped
 
-  # --- 3. TU BACKEND DE JAVA ---
-  usuarios-portfolios-service:
-    build:
-      context: ../../usuarios-portfolios
-      dockerfile: Dockerfile
-    container_name: tp-usuarios-portfolios
-    ports:
-      - "8081:8081"
-    environment:
-      - MYSQL_HOST=mysql-db
-      - MYSQL_DATABASE=usuarios_db
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
-    depends_on:
-      - mysql-db
-    networks:
-      - tp-network
-    restart: unless-stopped
+#  # --- 3. TU BACKEND DE JAVA ---
+#  usuarios-portfolios-service:
+#    build:
+#      context: ../../usuarios-portfolios
+#      dockerfile: Dockerfile
+#    container_name: tp-usuarios-portfolios
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      - MYSQL_HOST=mysql-db
+#      - MYSQL_DATABASE=usuarios_db
+#      - MYSQL_USER=root
+#      - MYSQL_PASSWORD=root
+#    depends_on:
+#      - mysql-db
+#    networks:
+#      - tp-network
+#    restart: unless-stopped
 
   # --- 4. MÉTRICAS: PROMETHEUS ---
   prometheus:
