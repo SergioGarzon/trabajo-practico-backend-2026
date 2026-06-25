@@ -1,5 +1,6 @@
 package com.utnfrc.usuario_portfolios.services;
 
+import com.utnfrc.usuario_portfolios.excepciones.PortfolioException;
 import com.utnfrc.usuario_portfolios.models.Accion;
 import com.utnfrc.usuario_portfolios.models.ItemPortfolio;
 import com.utnfrc.usuario_portfolios.models.Portfolio;
@@ -27,7 +28,7 @@ public class PortfolioService {
     public Portfolio findPortfolioById(Long id) {
         try {
             return repo.findById(id).orElse(null);
-        } catch (NumberFormatException e) {
+        } catch (PortfolioException e) {
             return null;
         }
     }

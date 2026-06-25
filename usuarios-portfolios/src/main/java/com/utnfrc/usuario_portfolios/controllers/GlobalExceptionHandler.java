@@ -1,9 +1,6 @@
 package com.utnfrc.usuario_portfolios.controllers;
 
-import com.utnfrc.usuario_portfolios.excepciones.BilleteraExistenteException;
-import com.utnfrc.usuario_portfolios.excepciones.ErrorResponse;
-import com.utnfrc.usuario_portfolios.excepciones.SaldoInsuficienteException;
-import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
+import com.utnfrc.usuario_portfolios.excepciones.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -23,8 +20,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(BilleteraExistenteException.class)
-    public ResponseEntity<ErrorResponse> handleBilleteraExistente(BilleteraExistenteException ex) {
+    @ExceptionHandler(BilleteraVituralException.class)
+    public ResponseEntity<ErrorResponse> handleBilleteraExistente(BilleteraVituralException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Operacion Invalida",
@@ -35,6 +32,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TransaccionInversionException.class)
     public ResponseEntity<ErrorResponse> handleTransaccionInversion(TransaccionInversionException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Operacion Invalida",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PortfolioException.class)
+    public ResponseEntity<ErrorResponse> handlePortfolio(PortfolioException ex) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Operacion Invalida",

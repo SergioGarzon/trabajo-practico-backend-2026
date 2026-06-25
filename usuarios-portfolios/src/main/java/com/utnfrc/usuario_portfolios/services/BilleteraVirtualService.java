@@ -38,10 +38,10 @@ public class BilleteraVirtualService {
     @Transactional
     public BilleteraVirtual createBV(String usuarioID) {
         Usuarios usuario = usuariosService
-                .getById(usuarioID).orElseThrow(() -> new BilleteraVituralNoExisteException("Usuario no encontrado"));
+                .getById(usuarioID).orElseThrow(() -> new BilleteraVituralException("Usuario no encontrado"));
 
         if (usuario.getBilleteraVirtual() != null) {
-            throw new BilleteraExistenteException("El usuario ya tiene una billetera asociada");
+            throw new BilleteraVituralException("El usuario ya tiene una billetera asociada");
         }
 
         BilleteraVirtual newBV = new BilleteraVirtual();
@@ -74,7 +74,7 @@ public class BilleteraVirtualService {
     public BilleteraVirtual retirarDinero(String idUsuario, Long cantidad) {
 
         BilleteraVirtual bv = bvRepository.findByUsuario_Id(idUsuario)
-                .orElseThrow(() -> new BilleteraVituralNoExisteException("La billetera no fue encontrada"));
+                .orElseThrow(() -> new BilleteraVituralException("La billetera no fue encontrada"));
 
         bv.retirarDinero(cantidad);
         bvRepository.save(bv);
@@ -84,7 +84,7 @@ public class BilleteraVirtualService {
     @Transactional
     public BilleteraVirtual ingresarDinero(String idUsuario, Long cantidad) {
         BilleteraVirtual bv = bvRepository.findByUsuario_Id(idUsuario)
-                .orElseThrow(() -> new BilleteraVituralNoExisteException("La billetera no fue encontrada"));
+                .orElseThrow(() -> new BilleteraVituralException("La billetera no fue encontrada"));
         bv.ingresarDinero(cantidad);
         bvRepository.save(bv);
         return bv;
@@ -115,12 +115,13 @@ public class BilleteraVirtualService {
 
 
     @Transactional
-    public BilleteraVirtual procesarRespuestaExterna(SolicitudDineroDTO dto) {
+    public BilleteraVirtual procesarRespuestaExterna(String userID, SolicitudDineroDTO dto) {
 
         ReservaSaldo reserva = reservaRepository.findById(dto.getIdTransaccion())
-                .orElseThrow(() -> new ResourceNotFoundException("La transacción de bloqueo no existe."));
+                .orElseThrow(() -> new TransaccionInversionException("La transacción de bloqueo no existe."));
 
-
+        Optional<Usuarios> user = usuariosService.getById(userID);
+        if (user.isEmpty()) {throw new BilleteraVituralException("Usuario no encontrado");}
         BilleteraVirtual bv = reserva.getBilletera();
         Long monto = reserva.getMonto();
 
@@ -128,15 +129,17 @@ public class BilleteraVirtualService {
 
         if ("CONFIRMAR".equalsIgnoreCase(dto.getEstadoAccion())) {
             bv.setDineroInvertido(bv.getDineroInvertido() + monto);
-            Portfolio portID = bv.getUsuario().getPortfolio();
-            Accion accion = accionService.buscarPorSimbolo(dto.getEstadoAccion());
+            Portfolio portID = user.get().getPortfolio();
+            if (portID == null) {throw new TransaccionInversionException("El portfolio no fue encontrado");}
+            Accion accion = accionService.buscarPorSimbolo(dto.getSimbolo());
+            if (accion == null) {throw new TransaccionInversionException("No se encontro la accion");}
             portfolioService.agregarAccion(portID.getId(), accion, dto.getCantidad());
             reserva.setEstado("CONFIRMADA");
         } else if ("RECHAZAR".equalsIgnoreCase(dto.getEstadoAccion())) {
             bv.setDineroLibre(bv.getDineroLibre() + monto);
             reserva.setEstado("RECHAZADA");
         } else {
-            throw new IllegalArgumentException("Accion militar no reconocida.");
+            throw new IllegalArgumentException("Accion no reconocida.");
         }
 
         reservaRepository.save(reserva);

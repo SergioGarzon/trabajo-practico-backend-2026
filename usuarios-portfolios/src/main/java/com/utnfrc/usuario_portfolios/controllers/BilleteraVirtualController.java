@@ -84,7 +84,7 @@ public class BilleteraVirtualController {
             @RequestBody SolicitudDineroDTO dto) {
 
         String userId = jwt.getSubject();
-        BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna( dto                                               );
+        BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna(userId, dto);
 
         return ResponseEntity.ok(bvActualizada);
     }
