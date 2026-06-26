@@ -55,6 +55,7 @@ services:
       - MYSQL_DATABASE=usuarios_db
       - MYSQL_USER=root
       - MYSQL_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - mysql-db
     networks:
