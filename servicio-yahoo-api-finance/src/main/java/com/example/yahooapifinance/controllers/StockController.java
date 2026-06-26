@@ -1,5 +1,6 @@
 package com.example.yahooapifinance.controllers;
 
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -14,8 +15,10 @@ import com.example.yahooapifinance.services.IStockServiceJSON;
 
 import ch.qos.logback.classic.Logger;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import com.example.yahooapifinance.dto.StockResponseDTO;
 import com.example.yahooapifinance.models.StockJSON;
 
 
@@ -34,17 +37,16 @@ public class StockController {
 	private final static Logger logger = (Logger) LoggerFactory.getLogger(StockController.class);
 
 
-    @GetMapping("/quota/{symbol}")
-    public ResponseEntity<String> getStock(@PathVariable String symbol) {
-    	logger.info("Se obtiene las acciones desde la API de Nokia RapidAPI que tiene informacion de Yahoo Finance");
-    	logger.warn("No exceder en peticiones porque hay un limite gratuito");
-    	
-        String jsonResponse = rapidStockService.getStockDataFromRapidApi(symbol);
-        return ResponseEntity.ok()
-                             .header("Content-Type", "application/json")
-                             .body(jsonResponse);
-    }    
-  
+	@GetMapping("/quota/{symbol}")
+    public ResponseEntity<BigDecimal> getStock(@PathVariable String symbol) {
+        logger.info("Se obtiene las acciones desde la API de Yahoo Finance en RapidAPI y se limpian los datos");
+        logger.warn("No exceder en peticiones porque hay un limite gratuito");
+        
+        BigDecimal priceArs = rapidStockService.getStockDataFromRapidApi(symbol);
+        
+        return ResponseEntity.ok(priceArs);
+    }
+	
     @GetMapping("/all-stocks")
     public ResponseEntity<?> getStocksJSON() {
     	logger.info("Se obtiene las acciones desde el JSON estatico");
