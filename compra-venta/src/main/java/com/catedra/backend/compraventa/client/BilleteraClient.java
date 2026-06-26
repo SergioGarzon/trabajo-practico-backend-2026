@@ -5,16 +5,20 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-// VERIFICAR: confirmar con el equipo de Usuarios que las rutas /api/billetera/operacion/bloquear
-// y /api/billetera/operacion/resolver coincidan exactamente con las de su controlador.
+/**
+ * Cliente Feign para el microservicio usuarios-portfolios.
+ * Endpoint único: resuelve la operación de compra de forma atómica
+ * (descuenta dinero y acredita las acciones al comprador).
+ *
+ * URL configurada vía propiedad: servicios.usuarios.url
+ */
 @FeignClient(name = "billetera-service", url = "${servicios.usuarios.url}")
 public interface BilleteraClient {
 
-    // Congela fondos preventivamente antes de intentar el emparejamiento.
-    @PutMapping("/api/billetera/operacion/bloquear")
-    Object bloquearFondos(@RequestBody SolicitudDineroDTO requestDto);
-
-    // Confirma (éxito) o libera (cancelación) los fondos previamente congelados.
+    /**
+     * Confirma o cancela una operación de billetera.
+     * Para el flujo de compra exitosa usar estadoAccion = "CONFIRMAR".
+     */
     @PutMapping("/api/billetera/operacion/resolver")
-    Object resolverOperacion(@RequestBody SolicitudDineroDTO requestDto);
+    void resolverOperacion(@RequestBody SolicitudDineroDTO requestDto);
 }

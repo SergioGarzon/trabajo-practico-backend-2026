@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrdenCompraRequestDto {
 
+    @NotNull
+    private Long usuarioId;
+
     @NotBlank
     private String simboloAccion;
 

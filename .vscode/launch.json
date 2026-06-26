@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ServicioYahooApiFinanceApplication",
+            "request": "launch",
+            "mainClass": "com.example.yahooapifinance.ServicioYahooApiFinanceApplication",
+            "projectName": "servicio-yahoo-api-finance"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-CompraVentaApplication<compra-venta>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

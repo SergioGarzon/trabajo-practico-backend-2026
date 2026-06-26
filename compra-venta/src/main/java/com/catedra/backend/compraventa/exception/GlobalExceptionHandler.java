@@ -66,6 +66,13 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(feign.FeignException.class)
+    public ResponseEntity<Map<String, Object>> handleFeignException(feign.FeignException ex) {
+        HttpStatus status = HttpStatus.resolve(ex.status());
+        if (status == null) status = HttpStatus.INTERNAL_SERVER_ERROR;
+        return buildErrorResponse("Error en comunicación con microservicio externo: " + ex.getMessage(), status);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception ex) {
         return buildErrorResponse("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);
