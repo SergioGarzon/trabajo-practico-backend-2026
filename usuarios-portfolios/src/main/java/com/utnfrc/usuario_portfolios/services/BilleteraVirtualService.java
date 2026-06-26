@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BilleteraVirtualService {
+public class BilleteraVirtualService implements IBilleteraVirtualService {
 
     private final UsuariosServices usuariosService;
     private final BilleteraVirtualRepository bvRepository;

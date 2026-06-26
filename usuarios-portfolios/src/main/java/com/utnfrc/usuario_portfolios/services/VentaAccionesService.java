@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class VentaAccionesService {
+public class VentaAccionesService implements IVentaAccionesService {
 
     private final UsuariosServices usuariosServices;
     private final OrdenVentaRepository ordenVentaRepository;

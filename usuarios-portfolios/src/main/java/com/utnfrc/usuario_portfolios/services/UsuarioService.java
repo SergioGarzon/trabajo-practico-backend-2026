@@ -12,7 +12,7 @@ import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements IUsuarioService {
 
     private final UsuarioRepository repo;
 

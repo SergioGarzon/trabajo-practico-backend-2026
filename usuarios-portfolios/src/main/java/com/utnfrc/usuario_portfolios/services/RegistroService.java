@@ -15,7 +15,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Service
-public class RegistroService {
+public class RegistroService implements IRegistroService {
 
     private final Keycloak keycloak;
     private final UsuariosRepositories usuarioRepository;

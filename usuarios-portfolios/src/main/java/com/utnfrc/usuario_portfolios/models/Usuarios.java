@@ -5,8 +5,16 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.io.Serializable;
 
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+
 @Entity
 @Table(name = "usuarios")
+@NoArgsConstructor
+@Setter
+@Getter
 public class Usuarios implements Serializable {
 
     @Id
@@ -28,72 +36,7 @@ public class Usuarios implements Serializable {
     @JoinColumn(name = "portfolio_id", referencedColumnName = "id")
     private Portfolio portfolio;
 
-    private String rol;
+    private String rol; 
 
-    public Usuarios() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Long getDni() {
-        return dni;
-    }
-
-    public void setDni(Long dni) {
-        this.dni = dni;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getDomicilio() {
-        return domicilio;
-    }
-
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
-    }
-
-    public BilleteraVirtual getBilleteraVirtual() {
-        return billeteraVirtual;
-    }
-
-    public void setBilleteraVirtual(BilleteraVirtual billeteraVirtual) {
-        this.billeteraVirtual = billeteraVirtual;
-    }
-
-    public Portfolio getPortfolio() {
-        return portfolio;
-    }
-
-    public void setPortfolio(Portfolio portfolio) {
-        this.portfolio = portfolio;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
+   
 }

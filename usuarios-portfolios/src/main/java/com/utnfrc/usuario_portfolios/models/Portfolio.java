@@ -10,10 +10,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
-
 @Entity
 @Table(name = "portfolios")
+@Getter 
+@Setter
 public class Portfolio implements Serializable {
 
     @Id
@@ -39,14 +39,5 @@ public class Portfolio implements Serializable {
         item.setPortfolio(this);
         this.items.add(item);
     }
-
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public Usuarios getUsuario() { return usuario; }
-    public void setUsuario(Usuarios usuario) { this.usuario = usuario; }
-    public List<ItemPortfolio> getItems() { return items; }
-    public void setItems(List<ItemPortfolio> items) { this.items = items; }
 
 }

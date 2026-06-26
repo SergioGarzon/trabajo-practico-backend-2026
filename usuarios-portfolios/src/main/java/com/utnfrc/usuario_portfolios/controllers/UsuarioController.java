@@ -13,6 +13,8 @@ import java.util.List;
 import com.utnfrc.usuario_portfolios.models.Usuarios;
 import com.utnfrc.usuario_portfolios.services.UsuarioService;
 import com.utnfrc.usuario_portfolios.dtos.RegistroDTO;
+import com.utnfrc.usuario_portfolios.services.IRegistroService;
+import com.utnfrc.usuario_portfolios.services.IUsuarioService;
 import com.utnfrc.usuario_portfolios.services.RegistroService;
 import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 
@@ -21,8 +23,8 @@ import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    private final UsuarioService service;
-    private final RegistroService registroService;
+    private final IUsuarioService service;
+    private final IRegistroService registroService;
 
     public UsuarioController(UsuarioService service, RegistroService registroService) {
         this.service = service;

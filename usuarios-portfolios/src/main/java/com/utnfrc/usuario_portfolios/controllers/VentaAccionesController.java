@@ -4,6 +4,7 @@ import com.utnfrc.usuario_portfolios.dtos.ResolucionVentaDTO;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudVentaDTO;
 import com.utnfrc.usuario_portfolios.models.OrdenVenta;
 import com.utnfrc.usuario_portfolios.repositories.OrdenVentaRepository;
+import com.utnfrc.usuario_portfolios.services.IVentaAccionesService;
 import com.utnfrc.usuario_portfolios.services.VentaAccionesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class VentaAccionesController {
 
     @Autowired
-    private final VentaAccionesService ventaAccionesService;
+    private final IVentaAccionesService ventaAccionesService;
 
     public VentaAccionesController(VentaAccionesService ventaAccionesService) {
         this.ventaAccionesService = ventaAccionesService;

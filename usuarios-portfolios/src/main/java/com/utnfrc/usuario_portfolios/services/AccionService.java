@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AccionService {
+public class AccionService implements IAccionService {
 
     @Autowired
     private AccionRepository repo;

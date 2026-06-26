@@ -3,6 +3,8 @@ package com.utnfrc.usuario_portfolios.controllers;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudDineroDTO;
 import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
 import com.utnfrc.usuario_portfolios.services.BilleteraVirtualService;
+import com.utnfrc.usuario_portfolios.services.IBilleteraVirtualService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +19,7 @@ import java.util.Map;
 @RequestMapping("/api/billetera")
 public class BilleteraVirtualController {
 
-    private final BilleteraVirtualService billeteraVirtualService;
+    private final IBilleteraVirtualService billeteraVirtualService;
 
     public BilleteraVirtualController(BilleteraVirtualService billeteraVirtualService) {
         this.billeteraVirtualService = billeteraVirtualService;
