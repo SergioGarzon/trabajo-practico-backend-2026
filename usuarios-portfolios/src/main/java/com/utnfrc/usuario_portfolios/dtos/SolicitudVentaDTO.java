@@ -5,10 +5,19 @@ public class SolicitudVentaDTO {
     private String simboloAccion; // Ej: "AAPL"
     private Long cantidadAVender;
 
+    private Long cantidadInicial;
+    private Long cantidadRestante;
+
+    public SolicitudVentaDTO() {}
+
     public String getSimboloAccion() { return simboloAccion; }
     public void setSimboloAccion(String simboloAccion) { this.simboloAccion = simboloAccion; }
     public Long getCantidadAVender() { return cantidadAVender; }
     public void setCantidadAVender(Long cantidadAVender) { this.cantidadAVender = cantidadAVender; }
     public String getIdOrdenVenta() { return idOrdenVenta; }
     public void setIdOrdenVenta(String idOrdenVenta) { this.idOrdenVenta = idOrdenVenta; }
+    public Long getCantidadInicial() { return cantidadInicial; }
+    public void setCantidadInicial(Long cantidadInicial) {this.cantidadInicial = cantidadInicial;}
+    public Long getCantidadRestante() { return cantidadRestante; }
+    public void setCantidadRestante(Long cantidadRestante) { this.cantidadRestante = cantidadRestante; }
 }

@@ -18,8 +18,8 @@ public class OrdenVenta {
     private Long cantidadRestante; // Lo que falta vender
     private String estado; // "PENDIENTE", "PARCIAL", "COMPLETADA", "CANCELADA"
 
-    public OrdenVenta() {
-        this.id = UUID.randomUUID().toString();
+    public OrdenVenta(String id) {
+        this.id = id;
         this.estado = "PENDIENTE";
     }
 

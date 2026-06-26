@@ -2,6 +2,7 @@ package com.utnfrc.usuario_portfolios.controllers;
 
 import com.utnfrc.usuario_portfolios.dtos.ResolucionVentaDTO;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudVentaDTO;
+import com.utnfrc.usuario_portfolios.models.OrdenVenta;
 import com.utnfrc.usuario_portfolios.repositories.OrdenVentaRepository;
 import com.utnfrc.usuario_portfolios.services.VentaAccionesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,17 @@ public class VentaAccionesController {
     }
 
     @PostMapping("/iniciar")
-    public ResponseEntity<Map<String, String>> iniciarVenta(
+    public ResponseEntity<SolicitudVentaDTO> iniciarVenta(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody SolicitudVentaDTO dto) {
 
         String userId = jwt.getSubject(); // Extraemos el usuario del Token seguro
-        String idOrden = ventaAccionesService.iniciarVenta(userId, dto);
+        OrdenVenta or = ventaAccionesService.iniciarVenta(userId, dto);
 
-        Map<String, String> respuesta = new HashMap<>();
-        respuesta.put("idOrdenVenta", idOrden);
-        respuesta.put("mensaje", "Orden de venta creada. Las acciones han sido bloqueadas.");
+        SolicitudVentaDTO respuesta =  new SolicitudVentaDTO();
+        respuesta.setIdOrdenVenta(dto.getIdOrdenVenta());
+        respuesta.setCantidadInicial(or.getCantidadInicial());
+        respuesta.setCantidadRestante(or.getCantidadRestante());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }

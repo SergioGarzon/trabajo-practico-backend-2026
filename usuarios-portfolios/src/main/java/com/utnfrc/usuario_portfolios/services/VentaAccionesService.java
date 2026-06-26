@@ -30,7 +30,7 @@ public class VentaAccionesService {
 
 
     @Transactional
-    public String iniciarVenta(String userId, SolicitudVentaDTO dto) {
+    public OrdenVenta iniciarVenta(String userId, SolicitudVentaDTO dto) {
         Usuarios usuario = usuariosServices.getById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
@@ -51,7 +51,7 @@ public class VentaAccionesService {
         item.setCantidadBloqueada(item.getCantidadBloqueada() + dto.getCantidadAVender());
 
 
-        OrdenVenta orden = new OrdenVenta();
+        OrdenVenta orden = new OrdenVenta(dto.getIdOrdenVenta());
         orden.setItemPortfolio(item);
         orden.setCantidadInicial(dto.getCantidadAVender());
         orden.setCantidadRestante(dto.getCantidadAVender());
@@ -59,37 +59,45 @@ public class VentaAccionesService {
         ordenVentaRepository.save(orden);
         portfolioRepository.save(portfolio);
 
-        return orden.getId();
+        return orden;
     }
 
 
     @Transactional
     public void procesarVenta(ResolucionVentaDTO dto) {
+
+        // verifica con el id que le pasan si existe la orden
         OrdenVenta orden = ordenVentaRepository.findById(dto.getIdOrdenVenta())
                 .orElseThrow(() -> new ResourceNotFoundException("Orden de venta no encontrada"));
 
+        // verifica que no este ya relizada
         if (orden.getEstado().equals("COMPLETADA") || orden.getEstado().equals("CANCELADA")) {
             throw new TransaccionInversionException("Esta orden ya está cerrada o cancelada.");
         }
 
+        //Verifica que no se quiera vender mas de lo que tiene a la venta
         if (orden.getCantidadRestante() < dto.getCantidadVendida()){
             throw new TransaccionInversionException("Estas intentado vender mas de lo que tiene");
         }
 
+        // Se busca que el item porfolio que tiene la infomacion sobre las acciones a la venta
         ItemPortfolio item = orden.getItemPortfolio();
         BilleteraVirtual bv = item.getPortfolio().getUsuario().getBilleteraVirtual();
 
+        // Actualizamos los contadores, desbloqueamos las acciones
         item.setCantidadBloqueada(item.getCantidadBloqueada() - dto.getCantidadVendida());
         orden.setCantidadRestante(orden.getCantidadRestante() - dto.getCantidadVendida());
-
+        // Sumamos el dinero obtenido
         bv.setDineroLibre(bv.getDineroLibre() + dto.getDineroObtenido());
 
+        // validamos si nos quedan acciones por vender o no
         if (orden.getCantidadRestante() == 0) {
             orden.setEstado("COMPLETADA");
         } else {
             orden.setEstado("PARCIAL");
         }
 
+        // si nos quedamos si acciones se debe quitar del portfolio
         if (item.getCantidadLibre() == 0 && item.getCantidadBloqueada() == 0) {
             item.getPortfolio().getItems().remove(item);
         }
