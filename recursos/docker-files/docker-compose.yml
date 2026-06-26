@@ -51,6 +51,8 @@ services:
     ports:
       - "8081:8081"
     environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8081
       - MYSQL_HOST=mysql-db
       - MYSQL_DATABASE=usuarios_db
       - MYSQL_USER=root
@@ -58,6 +60,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - mysql-db
+      - keycloak
     networks:
       - tp-network
     restart: unless-stopped
@@ -70,7 +73,7 @@ services:
       - "8082:8082"
     environment:
       - SERVER_PORT=8082
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/compraventa_db?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/compraventa_db?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -111,6 +114,24 @@ services:
     networks:
       - tp-network
 
+  api-gateway:
+    build:
+      context: ../../api-gateway
+      dockerfile: Dockerfile
+    container_name: tp-api-gateway
+    ports:
+      - "8083:8083" # Exponemos el puerto del Gateway al exterior (ej: 8080 o el que prefieran usar)
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # Podés pasarle variables para configurar dinámicamente las rutas si tu application.properties de Docker las usa:
+      # - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8180/realms/users-tp
+    depends_on:
+      - mysql-db
+      - keycloak
+    networks:
+      - tp-network
+    restart: unless-stopped
+
 volumes:
   keycloak_data:
     driver: local
@@ -120,3 +141,4 @@ volumes:
 networks:
   tp-network:
     driver: bridge
+
