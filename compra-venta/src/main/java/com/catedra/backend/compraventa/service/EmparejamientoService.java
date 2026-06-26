@@ -1,10 +1,9 @@
 package com.catedra.backend.compraventa.service;
 
 import com.catedra.backend.compraventa.client.BilleteraClient;
-import com.catedra.backend.compraventa.client.PortfolioClient;
-import com.catedra.backend.compraventa.dto.BilleteraOperacionRequestDto;
-import com.catedra.backend.compraventa.dto.BilleteraOperacionResponseDto;
-import com.catedra.backend.compraventa.dto.PortfolioOperacionRequestDto;
+import com.catedra.backend.compraventa.client.VentaClient;
+import com.catedra.backend.compraventa.dto.ResolucionVentaDTO;
+import com.catedra.backend.compraventa.dto.SolicitudDineroDTO;
 import com.catedra.backend.compraventa.models.OrdenCompra;
 import com.catedra.backend.compraventa.models.OrdenVenta;
 import com.catedra.backend.compraventa.models.Transaccion;
@@ -29,7 +28,7 @@ public class EmparejamientoService {
     private final OrdenVentaRepository ordenVentaRepository;
     private final TransaccionRepository transaccionRepository;
     private final BilleteraClient billeteraClient;
-    private final PortfolioClient portfolioClient;
+    private final VentaClient ventaClient;
 
     @Transactional
     public void procesarOrdenCompra(OrdenCompra ordenCompra) {
@@ -98,17 +97,29 @@ public class EmparejamientoService {
         ordenCompraRepository.save(ordenCompra);
         ordenVentaRepository.save(ordenVenta);
 
-        resolverFondosComprador(ordenCompra.getUsuarioId(), montoTransaccion);
+        // 1. Resolver Comprador (Resta saldo, Suma acciones)
+        SolicitudDineroDTO solicitud = new SolicitudDineroDTO();
+        solicitud.setIdTransaccion(String.valueOf(ordenCompra.getId()));
+        solicitud.setMonto(montoTransaccion.longValue());
+        solicitud.setEstadoAccion("CONFIRMAR");
+        solicitud.setSimbolo(ordenCompra.getSimboloAccion());
+        solicitud.setCantidad(cantidadTransaccion);
+        billeteraClient.resolverOperacion(solicitud);
 
-        transferirAcciones(ordenVenta.getUsuarioId(), ordenCompra.getUsuarioId(),
-                ordenCompra.getSimboloAccion(), cantidadTransaccion);
+        // 2. Resolver Vendedor (Resta acciones, Suma saldo)
+        ResolucionVentaDTO resolucion = new ResolucionVentaDTO();
+        resolucion.setIdOrdenVenta(String.valueOf(ordenVenta.getId()));
+        resolucion.setCantidadVendida(cantidadTransaccion);
+        resolucion.setDineroObtenido(montoTransaccion.longValue());
+        ventaClient.procesarVenta(resolucion);
     }
 
     private void bloquearFondosComprador(Long usuarioId, Double monto) {
         try {
-            BilleteraOperacionResponseDto respuesta = billeteraClient.bloquearFondos(
-                    new BilleteraOperacionRequestDto(usuarioId, monto));
-            if (respuesta == null || !Boolean.TRUE.equals(respuesta.getExitoso())) {
+            SolicitudDineroDTO request = new SolicitudDineroDTO();
+            request.setMonto(monto.longValue());
+            Object respuesta = billeteraClient.bloquearFondos(request);
+            if (respuesta == null) {
                 throw new BloqueoFondosException(usuarioId);
             }
         } catch (BloqueoFondosException e) {
@@ -116,15 +127,6 @@ public class EmparejamientoService {
         } catch (Exception e) {
             throw new BloqueoFondosException(usuarioId);
         }
-    }
-
-    private void resolverFondosComprador(Long usuarioId, Double monto) {
-        billeteraClient.resolverOperacion(new BilleteraOperacionRequestDto(usuarioId, monto));
-    }
-
-    private void transferirAcciones(Long vendedorId, Long compradorId, String simboloAccion, Long cantidad) {
-        portfolioClient.actualizarTenencia(new PortfolioOperacionRequestDto(vendedorId, simboloAccion, -cantidad));
-        portfolioClient.actualizarTenencia(new PortfolioOperacionRequestDto(compradorId, simboloAccion, cantidad));
     }
 
     private void actualizarEstadoOrden(OrdenCompra orden) {
