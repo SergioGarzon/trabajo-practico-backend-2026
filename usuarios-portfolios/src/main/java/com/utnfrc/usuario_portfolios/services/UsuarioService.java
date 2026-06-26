@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import com.utnfrc.usuario_portfolios.models.Usuarios;
 import com.utnfrc.usuario_portfolios.repositories.UsuarioRepository;
-import com.utnfrc.usuario_portfolios.exception.ResourceNotFoundException;
+import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 
 
 @Service

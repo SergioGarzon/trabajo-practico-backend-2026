@@ -14,7 +14,7 @@ import com.utnfrc.usuario_portfolios.models.Usuarios;
 import com.utnfrc.usuario_portfolios.services.UsuarioService;
 import com.utnfrc.usuario_portfolios.dtos.RegistroDTO;
 import com.utnfrc.usuario_portfolios.services.RegistroService;
-import com.utnfrc.usuario_portfolios.exception.ResourceNotFoundException;
+import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 
 
 @RestController
