@@ -69,6 +69,7 @@ services:
     ports:
       - "8082:8082"
     environment:
+      - SERVER_PORT=8082
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/compraventa_db?useSSL=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
@@ -77,6 +78,7 @@ services:
       - mysql-db
     networks:
       - tp-network
+    restart: unless-stopped
 
   # --- 4. MÉTRICAS: PROMETHEUS ---
   prometheus:
@@ -84,11 +86,11 @@ services:
     container_name: prometheus
     restart: unless-stopped
     volumes:
-      - .:/etc/prometheus
+      - ../../prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     command:
-      - "--config.file=/etc/prometheus/PROMETHEUS.yml"
+      - "--config.file=/etc/prometheus/prometheus.yml"
     networks:
       - tp-network
 
