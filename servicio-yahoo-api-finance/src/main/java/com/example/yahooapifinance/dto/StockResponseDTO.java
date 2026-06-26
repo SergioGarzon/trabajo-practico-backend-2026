@@ -8,7 +8,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class StockResponseDTO {
-	private String symbol;
-    private String name;
     private BigDecimal priceArs;
 }
