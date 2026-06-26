@@ -42,24 +42,40 @@ services:
       - tp-network
     restart: unless-stopped
 
-#  # --- 3. TU BACKEND DE JAVA ---
-#  usuarios-portfolios-service:
-#    build:
-#      context: ../../usuarios-portfolios
-#      dockerfile: Dockerfile
-#    container_name: tp-usuarios-portfolios
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      - MYSQL_HOST=mysql-db
-#      - MYSQL_DATABASE=usuarios_db
-#      - MYSQL_USER=root
-#      - MYSQL_PASSWORD=root
-#    depends_on:
-#      - mysql-db
-#    networks:
-#      - tp-network
-#    restart: unless-stopped
+  # --- 3. TU BACKEND DE JAVA ---
+  usuarios-portfolios-service:
+    build:
+      context: ../../usuarios-portfolios
+      dockerfile: Dockerfile
+    container_name: tp-usuarios-portfolios
+    ports:
+      - "8081:8081"
+    environment:
+      - MYSQL_HOST=mysql-db
+      - MYSQL_DATABASE=usuarios_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    depends_on:
+      - mysql-db
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+  compra-venta-service:
+    build:
+      context: ../../compra-venta
+    container_name: compra-venta-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/compraventa_db?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      - mysql-db
+    networks:
+      - tp-network
 
   # --- 4. MÉTRICAS: PROMETHEUS ---
   prometheus:

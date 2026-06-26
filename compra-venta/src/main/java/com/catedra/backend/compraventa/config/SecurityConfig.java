@@ -1,4 +1,4 @@
-﻿package com.catedra.backend.compraventa.config;
+package com.catedra.backend.compraventa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

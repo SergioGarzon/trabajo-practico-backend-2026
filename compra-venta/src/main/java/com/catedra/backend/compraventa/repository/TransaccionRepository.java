@@ -1,6 +1,6 @@
 package com.catedra.backend.compraventa.repository;
 
-import com.catedra.backend.compraventa.entity.Transaccion;
+import com.catedra.backend.compraventa.models.Transaccion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

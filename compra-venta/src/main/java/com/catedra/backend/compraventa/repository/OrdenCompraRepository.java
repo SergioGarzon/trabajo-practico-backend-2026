@@ -1,7 +1,7 @@
 package com.catedra.backend.compraventa.repository;
 
-import com.catedra.backend.compraventa.entity.OrdenCompra;
-import com.catedra.backend.compraventa.entity.enums.EstadoOrden;
+import com.catedra.backend.compraventa.models.OrdenCompra;
+import com.catedra.backend.compraventa.models.enums.EstadoOrden;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

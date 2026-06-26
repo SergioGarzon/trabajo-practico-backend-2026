@@ -1,7 +1,7 @@
 package com.catedra.backend.compraventa.service;
 
 import com.catedra.backend.compraventa.dto.TransaccionResponseDto;
-import com.catedra.backend.compraventa.entity.Transaccion;
+import com.catedra.backend.compraventa.models.Transaccion;
 import com.catedra.backend.compraventa.exception.TransaccionNoEncontradaException;
 import com.catedra.backend.compraventa.repository.TransaccionRepository;
 import lombok.RequiredArgsConstructor;

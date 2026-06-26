@@ -1,6 +1,6 @@
 package com.catedra.backend.compraventa.dto;
 
-import com.catedra.backend.compraventa.entity.enums.EstadoOrden;
+import com.catedra.backend.compraventa.models.enums.EstadoOrden;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

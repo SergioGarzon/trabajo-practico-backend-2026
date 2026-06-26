@@ -1,4 +1,4 @@
-package com.catedra.backend.compraventa.entity;
+package com.catedra.backend.compraventa.models;
 
 import jakarta.persistence.*;
 import lombok.Data;

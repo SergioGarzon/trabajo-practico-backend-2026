@@ -1,4 +1,4 @@
-package com.catedra.backend.compraventa.entity;
+package com.catedra.backend.compraventa.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "ordenes_venta")
-public class OrdenVenta extends Orden {
+@Table(name = "ordenes_compra")
+public class OrdenCompra extends Orden {
 
     @Column(nullable = false)
-    private Long cantidadOriginal;
+    private Long cantidadPedida;
 
     @Column(nullable = false)
     private Long cantidadRestante;

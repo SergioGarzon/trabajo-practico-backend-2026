@@ -1,4 +1,4 @@
-﻿package com.catedra.backend.compraventa;
+package com.catedra.backend.compraventa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

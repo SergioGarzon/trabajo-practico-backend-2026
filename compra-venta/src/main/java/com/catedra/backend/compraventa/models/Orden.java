@@ -1,6 +1,6 @@
-package com.catedra.backend.compraventa.entity;
+package com.catedra.backend.compraventa.models;
 
-import com.catedra.backend.compraventa.entity.enums.EstadoOrden;
+import com.catedra.backend.compraventa.models.enums.EstadoOrden;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
