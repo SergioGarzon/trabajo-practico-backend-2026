@@ -18,7 +18,7 @@ public class UsuariosPortfoliosClient {
 
     }
 
-    public boolean validarOperacion(Long idOrdenCompra, Double monto, String jwtToken) {
+    public boolean validarOperacion(Long idOrdenCompra, Long cantidad, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         // Pasamos el JWT al otro servicio para que no rebote por seguridad
         headers.set("Authorization", "Bearer " + jwtToken);
@@ -27,7 +27,7 @@ public class UsuariosPortfoliosClient {
 
         Map<String, Object> requestBody = Map.of(
                 "idOrdenCompra", idOrdenCompra,
-                "monto", monto
+                "monto", cantidad
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);

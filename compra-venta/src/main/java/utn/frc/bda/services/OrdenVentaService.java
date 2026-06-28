@@ -16,7 +16,7 @@ public class OrdenVentaService {
         this.portfolioClient = portfolioClient;
     }
 
-    public OrdenVenta registrarOrdenVenta(String usuarioId, String simbolo, int cantidad, double precio, String jwtToken) {
+    public OrdenVenta registrarOrdenVenta(String usuarioId, String simbolo, Long cantidad, double precio, String jwtToken) {
 
         OrdenVenta nuevaOrden = new OrdenVenta();
         nuevaOrden.setUsuarioId(usuarioId);
@@ -24,19 +24,11 @@ public class OrdenVentaService {
         nuevaOrden.setCantidad(cantidad);
         nuevaOrden.setPrecio(precio);
 
-        // 1. Nos comunicamos con el servicio de portfolios
-        // (En una venta, el otro servicio debería verificar si el usuario tiene la cantidad de acciones necesarias)
-        boolean validacionOk = portfolioClient.validarOperacion(Long , jwtToken);
+        // Verificamos con el servicio de Billetera Virtual si tiene las acciones necesarias para le venta
+        boolean validacionOk = portfolioClient.validarOperacion(nuevaOrden.getId(), cantidad, jwtToken);
 
         // 2. Si recibimos el "OK"
         if (validacionOk) {
-            OrdenVenta nuevaOrden = new OrdenVenta();
-            nuevaOrden.setUsuarioId(usuarioId);
-            nuevaOrden.setSimboloAccion(simbolo);
-            nuevaOrden.setCantidad(cantidad);
-            nuevaOrden.setPrecio(precio);
-
-            // 3. Guardamos la orden de venta
             return repository.save(nuevaOrden);
         } else {
             // Si recibimos "RECHAZADO"
