@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+import utn.frc.bda.interfaces.OrdenVentaInterfaz;
 import utn.frc.bda.models.OrdenCompra;
 import utn.frc.bda.models.OrdenVenta;
 import utn.frc.bda.repositories.OrdenCompraRepository;
@@ -13,14 +15,17 @@ import utn.frc.bda.repositories.OrdenVentaRepository;
 @Service
 public class EmparejamientoService {
 
+    private final OrdenVentaInterfaz ordenVentaInterfaz;
     private final OrdenVentaRepository ordenVentaRepository;
     private final OrdenCompraRepository ordenCompraRepository;
 
-    public EmparejamientoService(OrdenVentaRepository ordenVentaRepository, OrdenCompraRepository ordenCompraRepository) {
+    public EmparejamientoService(OrdenVentaRepository ordenVentaRepository, OrdenCompraRepository ordenCompraRepository, OrdenVentaInterfaz ordenVentaInterfaz) {
         this.ordenVentaRepository = ordenVentaRepository;
+        this.ordenVentaInterfaz = ordenVentaInterfaz;
         this.ordenCompraRepository = ordenCompraRepository;
     }
 
+    @Transactional
     public void procesarNuevaCompra(OrdenCompra ordenCompra) {
         
         List<OrdenVenta> vendedoresCompatibles = ordenVentaRepository
@@ -31,7 +36,8 @@ public class EmparejamientoService {
                 );
 
         for (OrdenVenta ordenVenta : vendedoresCompatibles) {
-            
+
+            // no tiene sentido, si tiene 0 entoces su estado es "Total"
             if (ordenCompra.getCantidad() == 0) {
                 break;
             }
@@ -48,12 +54,18 @@ public class EmparejamientoService {
                 ordenCompra.setEstado("COMPLETADA");
                 ordenVenta.setEstado(ordenVenta.getCantidad() == 0 ? "COMPLETADA" : "PARCIAL");
 
+                Double dineroTotal = cantidadAComprar * precioAcordado;
+                ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar);
+
             } 
             else {
                 cantidadAComprar = ordenVenta.getCantidad();
                 
                 ordenCompra.setCantidad(ordenCompra.getCantidad() - cantidadAComprar);
                 ordenVenta.setCantidad(0L);
+
+                Double dineroTotal = cantidadAComprar * precioAcordado;
+                ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar);
                 
                 ordenVenta.setEstado("COMPLETADA");
                 ordenCompra.setEstado("PARCIAL");

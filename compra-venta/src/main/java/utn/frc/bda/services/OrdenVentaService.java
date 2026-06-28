@@ -1,12 +1,14 @@
 package utn.frc.bda.services;
 
+import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.springframework.stereotype.Service;
+import utn.frc.bda.interfaces.OrdenVentaInterfaz;
 import utn.frc.bda.models.OrdenVenta;
 import utn.frc.bda.repositories.OrdenVentaRepository; // Deberás crear esta interfaz extendiendo JpaRepository
 import utn.frc.bda.clients.UsuariosPortfoliosClient;
 
 @Service
-public class OrdenVentaService {
+public class OrdenVentaService implements OrdenVentaInterfaz {
 
     private final OrdenVentaRepository repository;
     private final UsuariosPortfoliosClient portfolioClient;
@@ -34,5 +36,10 @@ public class OrdenVentaService {
             // Si recibimos "RECHAZADO"
             throw new RuntimeException("Operación rechazada: Fondos o acciones insuficientes en el portfolio.");
         }
+    }
+
+    public boolean realizarVenta(Long idOrdenVenta, Double dineroObtenido, Long cantidadVendida) {
+
+        boolean compraRealizada = portfolioClient.procesarVenta(idOrdenVenta, dineroObtenido, cantidadVendida);
     }
 }

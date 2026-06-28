@@ -43,12 +43,32 @@ public class UsuariosPortfoliosClient {
         }
     }
 
+    public boolean procesarVenta(Long idOrdenVenta, Double montoGanado, Long cantidadVendida ) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        Map<String, Object> requestBody = Map.of(
+            "idOrdenVenta", idOrdenVenta,
+            "dineroObtenido", montoGanado,
+            "cantidadVendida", cantidadVendida
+        );
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+        try {
+            String url = USERSERVICEVENTA + "/procesar";
+            ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
+            return Boolean.TRUE.equals(response.getBody());
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+
     public boolean validarOrdenCompra(Long idOrden, Double cantidad, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + jwtToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> requestBody = Map.of(
+                "idOrdenCompra", idOrden,
                 "monto", cantidad
         );
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
@@ -61,4 +81,7 @@ public class UsuariosPortfoliosClient {
             return false;
         }
     }
+
+
+
 }
