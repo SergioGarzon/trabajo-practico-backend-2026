@@ -16,7 +16,6 @@ public class UsuariosPortfoliosClient {
 
     public UsuariosPortfoliosClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-
     }
 
     public boolean validarOrdenVenta(String simboloAccion, Long cantidad, String jwtToken) {
@@ -44,7 +43,7 @@ public class UsuariosPortfoliosClient {
         }
     }
 
-    public boolean validarOrdenCompra(Double cantidad, String jwtToken) {
+    public boolean validarOrdenCompra(Long idOrden, Double cantidad, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + jwtToken);
         headers.setContentType(MediaType.APPLICATION_JSON);

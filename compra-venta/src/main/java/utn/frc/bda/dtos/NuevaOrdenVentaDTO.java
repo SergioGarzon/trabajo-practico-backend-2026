@@ -6,5 +6,5 @@ import lombok.Data;
 public class NuevaOrdenVentaDTO {
     private String simbolo;
     private Long cantidad;
-    private Long montoMinimo; // Lo mínimo que acepta recibir por CADA acción
+    private Double montoMinimo; // Lo mínimo que acepta recibir por CADA acción
 }

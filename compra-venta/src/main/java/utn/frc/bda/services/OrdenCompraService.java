@@ -28,7 +28,7 @@ public class OrdenCompraService {
 
         Double totalPagar = nuevaOrden.getCantidad() * nuevaOrden.getPrecio();
 
-        boolean validacionOk = portfolioClient.validarOrdenCompra(totalPagar, jwtToken);
+        boolean validacionOk = portfolioClient.validarOrdenCompra(nuevaOrden.getId(), totalPagar, jwtToken);
 
         if (validacionOk) {
             return repository.save(nuevaOrden);

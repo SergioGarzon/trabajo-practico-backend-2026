@@ -6,5 +6,5 @@ import lombok.Data;
 public class NuevaOrdenCompraDTO {
     private String simbolo;
     private Long cantidad;
-    private Long montoMaximo;
+    private Double montoMaximo;
 }
