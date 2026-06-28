@@ -13,8 +13,8 @@ import lombok.Getter;
 public class OrdenCompra {
 
     @Id
-    private String id;
-    private Long monto;
+    private Long id;
+    private Double monto;
 
 
     private String estado; // "PENDIENTE", "CONFIRMADA", "RECHAZADA"
@@ -24,7 +24,7 @@ public class OrdenCompra {
     private BilleteraVirtual billetera;
 
 
-    public OrdenCompra(String idOrdenCompra) {
+    public OrdenCompra(Long idOrdenCompra) {
         this.id = idOrdenCompra;
         this.estado = "PENDIENTE";
     }    

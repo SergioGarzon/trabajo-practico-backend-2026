@@ -48,9 +48,9 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
         Long numeroCBU = Math.abs(random.nextLong() % 1_000_000_000_000L); // 12 dígitos aprox.
         newBV.setNumeroCBU(numeroCBU);
         newBV.setAlias(usuario.getNombre() + " " + usuario.getApellido());
-        newBV.setDineroLibre(0L);
-        newBV.setDineroInvertido(0L);
-        newBV.setDineroBloqueado(0L);
+        newBV.setDineroLibre(0D);
+        newBV.setDineroInvertido(0D);
+        newBV.setDineroBloqueado(0D);
         newBV.setUsuario(usuario);
         usuario.setBilleteraVirtual(newBV);
         usuariosRepositories.save(usuario);
@@ -92,7 +92,7 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
 
 
     @Transactional
-    public String solicitarYBloquearDinero(String keycloakUserId, Long monto, String idOrdenCompra) {
+    public Long solicitarYBloquearDinero(String keycloakUserId, Double monto, Long idOrdenCompra) {
         BilleteraVirtual bv = bvRepository.findByUsuario_Id(keycloakUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Billetera no encontrada"));
 
@@ -123,7 +123,7 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
         Optional<Usuarios> user = usuariosService.getById(userID);
         if (user.isEmpty()) {throw new BilleteraVituralException("Usuario no encontrado");}
         BilleteraVirtual bv = reserva.getBilletera();
-        Long monto = reserva.getMonto();
+        Double monto = reserva.getMonto();
 
         bv.setDineroBloqueado(bv.getDineroBloqueado() - monto);
 

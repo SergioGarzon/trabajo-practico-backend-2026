@@ -37,7 +37,7 @@ public class EmparejamientoService {
 
         for (OrdenVenta ordenVenta : vendedoresCompatibles) {
 
-            // no tiene sentido, si tiene 0 entoces su estado es "Total"
+
             if (ordenCompra.getCantidad() == 0) {
                 break;
             }
