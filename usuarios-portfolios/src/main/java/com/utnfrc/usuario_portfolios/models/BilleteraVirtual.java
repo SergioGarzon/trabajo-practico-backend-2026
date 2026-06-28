@@ -25,9 +25,9 @@ public class BilleteraVirtual implements Serializable {
 
     private Long numeroCBU;
 
-    private Long dineroLibre;
-    private Long dineroInvertido;
-    private Long dineroBloqueado;
+    private Double dineroLibre;
+    private Double dineroInvertido;
+    private Double dineroBloqueado;
 
     @OneToOne(mappedBy = "billeteraVirtual")
     @JsonBackReference

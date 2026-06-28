@@ -13,7 +13,7 @@ import lombok.Getter;
 public class OrdenVenta {
 
     @Id
-    private String id; // UUID de la transacción
+    private Long id; // UUID de la transacción
 
     @ManyToOne
     @JoinColumn(name = "item_portfolio_id")
@@ -23,7 +23,7 @@ public class OrdenVenta {
     private Long cantidadRestante; // Lo que falta vender
     private String estado; // "PENDIENTE", "PARCIAL", "COMPLETADA", "CANCELADA"
 
-    public OrdenVenta(String id) {
+    public OrdenVenta(Long id) {
         this.id = id;
         this.estado = "PENDIENTE";
     }
