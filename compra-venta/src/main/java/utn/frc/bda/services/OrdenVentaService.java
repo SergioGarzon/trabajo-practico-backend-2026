@@ -25,7 +25,7 @@ public class OrdenVentaService {
         nuevaOrden.setPrecio(precio);
 
         // Verificamos con el servicio de Billetera Virtual si tiene las acciones necesarias para le venta
-        boolean validacionOk = portfolioClient.validarOperacion(nuevaOrden.getId(), cantidad, jwtToken);
+        boolean validacionOk = portfolioClient.validarOrdenVenta(nuevaOrden.getSimboloAccion(), cantidad, jwtToken);
 
         // 2. Si recibimos el "OK"
         if (validacionOk) {

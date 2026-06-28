@@ -11,14 +11,15 @@ public class UsuariosPortfoliosClient {
 
     private final RestTemplate restTemplate;
     // URL base del otro microservicio (luego lo pasamos a application.properties)
-    private final String USERSERVICE = "http://localhost:8081/api/billetera/operacion";
+    private final String USERSERVICEVENTA = "http://localhost:8081/api/ventas";
+    private final String USERSERVICECOMPRA = "http://localhost:8081/api/billetera/operacion";
 
     public UsuariosPortfoliosClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
 
     }
 
-    public boolean validarOperacion(Long idOrdenCompra, Long cantidad, String jwtToken) {
+    public boolean validarOrdenVenta(String simboloAccion, Long cantidad, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         // Pasamos el JWT al otro servicio para que no rebote por seguridad
         headers.set("Authorization", "Bearer " + jwtToken);
@@ -26,19 +27,38 @@ public class UsuariosPortfoliosClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> requestBody = Map.of(
-                "idOrdenCompra", idOrdenCompra,
-                "monto", cantidad
+                "simboloAccion", simboloAccion,
+                "cantidadVender", cantidad
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
             // Ejemplo de endpoint: /api/portfolios/validar?usuarioId=1&tipo=VENTA...
-            String url = USERSERVICE + "/bloquear";
+            String url = USERSERVICEVENTA + "/iniciar";
             ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
             return Boolean.TRUE.equals(response.getBody());
         } catch (Exception e) {
             // Si el servicio rechaza (400/403) o está caído, devolvemos false
+            return false;
+        }
+    }
+
+    public boolean validarOrdenCompra(Double cantidad, String jwtToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + jwtToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = Map.of(
+                "monto", cantidad
+        );
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            String url = USERSERVICECOMPRA + "/bloquear";
+            ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
+            return Boolean.TRUE.equals(response.getBody());
+        }catch (Exception e) {
             return false;
         }
     }
