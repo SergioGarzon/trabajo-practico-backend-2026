@@ -16,7 +16,7 @@ public class OrdenVenta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long usuarioId; // Obtenido del token
+    private String usuarioId; // Obtenido del token
     private String simboloAccion;
     private Long cantidad;
     private Double precio;

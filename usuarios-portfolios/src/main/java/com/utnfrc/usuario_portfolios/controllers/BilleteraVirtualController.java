@@ -65,19 +65,18 @@ public class BilleteraVirtualController {
 
 
     @PutMapping("/operacion/bloquear")
-    public ResponseEntity<SolicitudDineroDTO> iniciarOperacion(
+    public ResponseEntity<Boolean> iniciarOperacion(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody SolicitudDineroDTO dto) {
 
-        String userId = jwt.getSubject();
-        String idTransaccion = billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto(), dto.getIdOrdenCompra());
+        try{
+            String userId = jwt.getSubject();
+            billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto(), dto.getIdOrdenCompra());
+            return ResponseEntity.ok(true);
 
-        SolicitudDineroDTO newDto = new SolicitudDineroDTO();
-        newDto.setMonto(dto.getMonto());
-        newDto.setIdOrdenCompra(dto.getIdOrdenCompra());
-        newDto.setMensaje("Se bloqueo exitosamente el dinero para la compra");
-
-        return ResponseEntity.ok(newDto);
+        }catch(Exception e){
+            return ResponseEntity.ok(false);
+        }
     }
 
 

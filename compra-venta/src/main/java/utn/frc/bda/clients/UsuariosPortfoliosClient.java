@@ -1,11 +1,10 @@
 package utn.frc.bda.clients;
 
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+
+import java.util.Map;
 
 @Component
 public class UsuariosPortfoliosClient {
@@ -19,12 +18,19 @@ public class UsuariosPortfoliosClient {
 
     }
 
-    public boolean validarOperacion(Long usuarioId, String tipoOperacion, Double monto, String jwtToken) {
+    public boolean validarOperacion(Long idOrdenCompra, Double monto, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         // Pasamos el JWT al otro servicio para que no rebote por seguridad
         headers.set("Authorization", "Bearer " + jwtToken);
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = Map.of(
+                "idOrdenCompra", idOrdenCompra,
+                "monto", monto
+        );
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
             // Ejemplo de endpoint: /api/portfolios/validar?usuarioId=1&tipo=VENTA...
