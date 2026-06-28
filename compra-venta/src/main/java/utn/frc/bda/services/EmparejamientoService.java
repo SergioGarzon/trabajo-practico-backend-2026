@@ -64,7 +64,7 @@ public class EmparejamientoService {
             System.out.println("¡MATCH! Compradas " + cantidadAComprar + " acciones de " + 
                                ordenCompra.getSimboloAccion() + " a $" + precioAcordado);
         }
-        
+    
         if (ordenCompra.getCantidad() > 0 && !ordenCompra.getEstado().equals("PENDIENTE")) {
             ordenCompra.setEstado("PARCIAL");
             ordenCompraRepository.save(ordenCompra);
