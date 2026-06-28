@@ -92,7 +92,7 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
 
 
     @Transactional
-    public String solicitarYBloquearDinero(String keycloakUserId, Long monto) {
+    public String solicitarYBloquearDinero(String keycloakUserId, Long monto, String idOrdenCompra) {
         BilleteraVirtual bv = bvRepository.findByUsuario_Id(keycloakUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Billetera no encontrada"));
 
@@ -104,7 +104,7 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
         bv.setDineroBloqueado((bv.getDineroBloqueado() != null ? bv.getDineroBloqueado() : 0L) + monto);
         bvRepository.save(bv);
 
-        ReservaSaldo reserva = new ReservaSaldo();
+        OrdenCompra reserva = new OrdenCompra(idOrdenCompra);
         reserva.setMonto(monto);
         reserva.setBilletera(bv);
 
@@ -117,7 +117,7 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
     @Transactional
     public BilleteraVirtual procesarRespuestaExterna(String userID, SolicitudDineroDTO dto) {
 
-        ReservaSaldo reserva = reservaRepository.findById(dto.getIdTransaccion())
+        OrdenCompra reserva = reservaRepository.findById(dto.getIdOrdenCompra())
                 .orElseThrow(() -> new TransaccionInversionException("La transacción de bloqueo no existe."));
 
         Optional<Usuarios> user = usuariosService.getById(userID);

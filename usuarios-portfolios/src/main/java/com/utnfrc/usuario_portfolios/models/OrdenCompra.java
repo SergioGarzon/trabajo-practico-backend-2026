@@ -7,14 +7,15 @@ import lombok.Setter;
 import lombok.Getter;
 
 @Entity
-@Table(name = "reservas_saldo")
+@Table(name = "orden_compra")
 @Setter
 @Getter
-public class ReservaSaldo {
+public class OrdenCompra {
 
     @Id
     private String id;
     private Long monto;
+
 
     private String estado; // "PENDIENTE", "CONFIRMADA", "RECHAZADA"
 
@@ -23,8 +24,8 @@ public class ReservaSaldo {
     private BilleteraVirtual billetera;
 
 
-    public ReservaSaldo() {
-        this.id = UUID.randomUUID().toString();
+    public OrdenCompra(String idOrdenCompra) {
+        this.id = idOrdenCompra;
         this.estado = "PENDIENTE";
     }    
 }

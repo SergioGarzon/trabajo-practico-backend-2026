@@ -39,6 +39,7 @@ public class VentaAccionesController {
         respuesta.setIdOrdenVenta(dto.getIdOrdenVenta());
         respuesta.setCantidadInicial(or.getCantidadInicial());
         respuesta.setCantidadRestante(or.getCantidadRestante());
+        respuesta.setMensaje("Se bloquearon las acciones exitosamente");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }

@@ -65,30 +65,33 @@ public class BilleteraVirtualController {
 
 
     @PutMapping("/operacion/bloquear")
-    public ResponseEntity<Map<String, String>> iniciarOperacion(
+    public ResponseEntity<SolicitudDineroDTO> iniciarOperacion(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody SolicitudDineroDTO dto) {
 
         String userId = jwt.getSubject();
-        String idTransaccion = billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto());
+        String idTransaccion = billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto(), dto.getIdOrdenCompra());
 
-        Map<String, String> respuesta = new HashMap<>();
-        respuesta.put("idTransaccion", idTransaccion);
-        respuesta.put("mensaje", "Dinero bloqueado. Guarde este ID para la resolución.");
+        SolicitudDineroDTO newDto = new SolicitudDineroDTO();
+        newDto.setMonto(dto.getMonto());
+        newDto.setIdOrdenCompra(dto.getIdOrdenCompra());
+        newDto.setMensaje("Se bloqueo exitosamente el dinero para la compra");
 
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(newDto);
     }
 
 
     @PutMapping("/operacion/resolver")
-    public ResponseEntity<BilleteraVirtual> resolverOperacion(
+    public ResponseEntity<SolicitudDineroDTO> resolverOperacion(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody SolicitudDineroDTO dto) {
 
         String userId = jwt.getSubject();
         BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna(userId, dto);
 
-        return ResponseEntity.ok(bvActualizada);
+        dto.setMensaje("Se realizo la compra exitosamente");
+
+        return ResponseEntity.ok(dto);
     }
 
 

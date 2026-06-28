@@ -4,7 +4,7 @@ public class SolicitudVentaDTO {
     private String idOrdenVenta;
     private String simboloAccion; // Ej: "AAPL"
     private Long cantidadAVender;
-
+    private String mensaje;
     private Long cantidadInicial;
     private Long cantidadRestante;
 
@@ -20,4 +20,6 @@ public class SolicitudVentaDTO {
     public void setCantidadInicial(Long cantidadInicial) {this.cantidadInicial = cantidadInicial;}
     public Long getCantidadRestante() { return cantidadRestante; }
     public void setCantidadRestante(Long cantidadRestante) { this.cantidadRestante = cantidadRestante; }
+    public String getMensaje() { return mensaje; }
+    public void setMensaje(String mensaje) { this.mensaje = mensaje; }
 }

@@ -1,4 +1,8 @@
 package utn.frc.bda.repositories;
 
-public interface OrdenCompraRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import utn.frc.bda.models.OrdenCompra;
+
+public interface OrdenCompraRepository extends JpaRepository<OrdenCompra, Long> {
+
 }

@@ -20,7 +20,7 @@ public interface IBilleteraVirtualService {
 
     BilleteraVirtual ingresarDinero(String idUsuario, Long cantidad);
 
-    String solicitarYBloquearDinero(String keycloakUserId, Long monto);
+    String solicitarYBloquearDinero(String keycloakUserId, Long monto, String idOrdenCompra);
 
     BilleteraVirtual procesarRespuestaExterna(String userID, SolicitudDineroDTO dto);
 }

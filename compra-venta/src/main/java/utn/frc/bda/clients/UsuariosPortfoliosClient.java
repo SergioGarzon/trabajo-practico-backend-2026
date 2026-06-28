@@ -12,13 +12,14 @@ public class UsuariosPortfoliosClient {
 
     private final RestTemplate restTemplate;
     // URL base del otro microservicio (luego lo pasamos a application.properties)
-    private final String PORTFOLIO_SERVICE_URL = "http://localhost:8080/api/portfolios";
+    private final String USERSERVICE = "http://localhost:8081/api/billetera/operacion";
 
     public UsuariosPortfoliosClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+
     }
 
-    public boolean validarOperacion(Long usuarioId, String tipoOperacion, Double montoOCantidad, String jwtToken) {
+    public boolean validarOperacion(Long usuarioId, String tipoOperacion, Double monto, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         // Pasamos el JWT al otro servicio para que no rebote por seguridad
         headers.set("Authorization", "Bearer " + jwtToken);
@@ -27,9 +28,8 @@ public class UsuariosPortfoliosClient {
 
         try {
             // Ejemplo de endpoint: /api/portfolios/validar?usuarioId=1&tipo=VENTA...
-            String url = PORTFOLIO_SERVICE_URL + "/validar?usuarioId=" + usuarioId + "&tipo=" + tipoOperacion;
-            ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.GET, entity, Boolean.class);
-
+            String url = USERSERVICE + "/bloquear";
+            ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
             return Boolean.TRUE.equals(response.getBody());
         } catch (Exception e) {
             // Si el servicio rechaza (400/403) o está caído, devolvemos false
