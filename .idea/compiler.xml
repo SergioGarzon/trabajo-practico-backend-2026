@@ -18,7 +18,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
-      <module name="compra-venta" options="" />
+      <module name="compra-venta" options="-parameters" />
       <module name="servicio-emparejamiento-ordenes-compra-venta" options="-parameters" />
       <module name="servicio-yahoo-api-finance" options="-parameters" />
       <module name="usuarios-portfolios" options="-parameters" />
