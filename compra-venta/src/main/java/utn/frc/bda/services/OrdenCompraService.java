@@ -7,8 +7,10 @@ import utn.frc.bda.models.OrdenCompra;
 import utn.frc.bda.repositories.OrdenCompraRepository;
 import utn.frc.bda.repositories.OrdenVentaRepository;
 
+import utn.frc.bda.interfaces.OrdenCompraInterface;
+
 @Service
-public class OrdenCompraService {
+public class OrdenCompraService implements OrdenCompraInterface {
     private final OrdenCompraRepository repository;
     private final UsuariosPortfoliosClient portfolioClient;
 
@@ -36,6 +38,10 @@ public class OrdenCompraService {
             // Si recibimos "RECHAZADO"
             throw new RuntimeException("Operación rechazada: Fondos o acciones insuficientes en el portfolio.");
         }
+    }
 
+    @Override
+    public boolean realizarCompra(Long idOrdenCompra, Long cantidad, Double precio) {
+        return portfolioClient.resolverOrdenCompra(idOrdenCompra, cantidad, precio);
     }
 }

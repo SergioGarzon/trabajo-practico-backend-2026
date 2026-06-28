@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+import utn.frc.bda.interfaces.OrdenCompraInterface;
 import utn.frc.bda.interfaces.OrdenVentaInterfaz;
 import utn.frc.bda.models.OrdenCompra;
 import utn.frc.bda.models.OrdenVenta;
@@ -16,12 +17,14 @@ import utn.frc.bda.repositories.OrdenVentaRepository;
 public class EmparejamientoService {
 
     private final OrdenVentaInterfaz ordenVentaInterfaz;
+    private final OrdenCompraInterface ordenCompraInterface;
     private final OrdenVentaRepository ordenVentaRepository;
     private final OrdenCompraRepository ordenCompraRepository;
 
-    public EmparejamientoService(OrdenVentaRepository ordenVentaRepository, OrdenCompraRepository ordenCompraRepository, OrdenVentaInterfaz ordenVentaInterfaz) {
+    public EmparejamientoService(OrdenVentaRepository ordenVentaRepository, OrdenCompraRepository ordenCompraRepository, OrdenVentaInterfaz ordenVentaInterfaz, OrdenCompraInterface ordenCompraInterface) {
         this.ordenVentaRepository = ordenVentaRepository;
         this.ordenVentaInterfaz = ordenVentaInterfaz;
+        this.ordenCompraInterface = ordenCompraInterface;
         this.ordenCompraRepository = ordenCompraRepository;
     }
 
@@ -56,6 +59,7 @@ public class EmparejamientoService {
 
                 Double dineroTotal = cantidadAComprar * precioAcordado;
                 ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar);
+                ordenCompraInterface.realizarCompra(ordenCompra.getId(), cantidadAComprar, precioAcordado);
 
             } 
             else {
@@ -66,6 +70,7 @@ public class EmparejamientoService {
 
                 Double dineroTotal = cantidadAComprar * precioAcordado;
                 ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar);
+                ordenCompraInterface.realizarCompra(ordenCompra.getId(), cantidadAComprar, precioAcordado);
                 
                 ordenVenta.setEstado("COMPLETADA");
                 ordenCompra.setEstado("PARCIAL");

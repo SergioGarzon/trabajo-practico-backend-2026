@@ -1,10 +1,14 @@
 package utn.frc.bda.clients;
 
-import org.springframework.http.*;
+import java.util.Map;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
 
 @Component
 public class UsuariosPortfoliosClient {
@@ -82,6 +86,27 @@ public class UsuariosPortfoliosClient {
         }
     }
 
+
+    public boolean resolverOrdenCompra(Long idOrdenCompra, Long cantidadComprada, Double precioAcordado) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> requestBody = Map.of(
+                "idOrdenCompra", idOrdenCompra,
+                "cantidadComprada", cantidadComprada,
+                "precioAcordado", precioAcordado
+        );
+        
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+        try {
+            String url = USERSERVICECOMPRA + "/resolver";
+            ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
+            return Boolean.TRUE.equals(response.getBody());
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 
 }
