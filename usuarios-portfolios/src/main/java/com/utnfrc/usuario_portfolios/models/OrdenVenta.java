@@ -1,16 +1,13 @@
 package com.utnfrc.usuario_portfolios.models;
 
-import jakarta.persistence.*;
-import java.util.UUID;
-
-import lombok.Setter;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "ordenes_venta")
-
-@NoArgsConstructor
 public class OrdenVenta {
 
     @Id
@@ -24,6 +21,9 @@ public class OrdenVenta {
     private Long cantidadRestante; // Lo que falta vender
     private String estado; // "PENDIENTE", "PARCIAL", "COMPLETADA", "CANCELADA"
 
+    public OrdenVenta(){
+        
+    }
     public OrdenVenta(Long id) {
         this.id = id;
         this.estado = "PENDIENTE";

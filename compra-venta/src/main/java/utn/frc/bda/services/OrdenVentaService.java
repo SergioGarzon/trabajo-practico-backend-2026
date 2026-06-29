@@ -1,11 +1,11 @@
 package utn.frc.bda.services;
 
-import org.springframework.data.jpa.repository.support.JpaRepositoryImplementation;
 import org.springframework.stereotype.Service;
+
+import utn.frc.bda.clients.UsuariosPortfoliosClient;
 import utn.frc.bda.interfaces.OrdenVentaInterfaz;
 import utn.frc.bda.models.OrdenVenta;
 import utn.frc.bda.repositories.OrdenVentaRepository; // Deberás crear esta interfaz extendiendo JpaRepository
-import utn.frc.bda.clients.UsuariosPortfoliosClient;
 
 @Service
 public class OrdenVentaService implements OrdenVentaInterfaz {
@@ -18,6 +18,7 @@ public class OrdenVentaService implements OrdenVentaInterfaz {
         this.portfolioClient = portfolioClient;
     }
 
+    @Override
     public OrdenVenta registrarOrdenVenta(String usuarioId, String simbolo, Long cantidad, Double precio, String jwtToken) {
 
         OrdenVenta nuevaOrden = new OrdenVenta();
@@ -25,7 +26,7 @@ public class OrdenVentaService implements OrdenVentaInterfaz {
         nuevaOrden.setSimboloAccion(simbolo);
         nuevaOrden.setCantidad(cantidad);
         nuevaOrden.setPrecio(precio);
-
+        nuevaOrden = repository.save(nuevaOrden);
         // Verificamos con el servicio de Billetera Virtual si tiene las acciones necesarias para le venta
         boolean validacionOk = portfolioClient.validarOrdenVenta(nuevaOrden.getSimboloAccion(), cantidad, jwtToken);
 
@@ -39,7 +40,6 @@ public class OrdenVentaService implements OrdenVentaInterfaz {
     }
 
     public boolean realizarVenta(Long idOrdenVenta, Double dineroObtenido, Long cantidadVendida) {
-
         boolean compraRealizada = portfolioClient.procesarVenta(idOrdenVenta, dineroObtenido, cantidadVendida);
         return  compraRealizada;
     }
