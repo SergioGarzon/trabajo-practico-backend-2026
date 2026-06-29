@@ -81,8 +81,9 @@ public class UsuariosPortfoliosClient {
             String url = USERSERVICECOMPRA + "/bloquear";
             ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
             return Boolean.TRUE.equals(response.getBody());
+
         }catch (Exception e) {
-            return false;
+            throw  new RuntimeException("no conexion servicio: " + e.getMessage());
         }
     }
 

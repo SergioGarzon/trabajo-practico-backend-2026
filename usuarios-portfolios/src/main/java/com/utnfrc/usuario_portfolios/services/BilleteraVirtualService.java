@@ -101,7 +101,7 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
         }
 
         bv.setDineroLibre(bv.getDineroLibre() - monto);
-        bv.setDineroBloqueado((bv.getDineroBloqueado() != null ? bv.getDineroBloqueado() : 0L) + monto);
+        bv.setDineroBloqueado((bv.getDineroBloqueado() != null ? bv.getDineroBloqueado() : 0D) + monto);
         bvRepository.save(bv);
 
         OrdenCompra reserva = new OrdenCompra(idOrdenCompra);

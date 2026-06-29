@@ -18,7 +18,7 @@ public class OrdenVentaService implements OrdenVentaInterfaz {
         this.portfolioClient = portfolioClient;
     }
 
-    public OrdenVenta registrarOrdenVenta(String usuarioId, String simbolo, Long cantidad, double precio, String jwtToken) {
+    public OrdenVenta registrarOrdenVenta(String usuarioId, String simbolo, Long cantidad, Double precio, String jwtToken) {
 
         OrdenVenta nuevaOrden = new OrdenVenta();
         nuevaOrden.setUsuarioId(usuarioId);

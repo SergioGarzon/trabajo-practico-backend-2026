@@ -35,8 +35,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - mysql_data:/var/lib/mysql
-      # Script para que cree 'keycloak_db' automáticamente al iniciar
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      # Script para que cree 'keycloak_db' automáticamente al iniciar-
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:Z
     networks:
       - tp-network
     restart: unless-stopped

@@ -3,10 +3,7 @@ package utn.frc.bda.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import utn.frc.bda.dtos.NuevaOrdenCompraDTO;
 import utn.frc.bda.dtos.NuevaOrdenVentaDTO;
@@ -15,6 +12,8 @@ import utn.frc.bda.interfaces.OrdenVentaInterfaz;
 import utn.frc.bda.models.OrdenCompra;
 import utn.frc.bda.models.OrdenVenta;
 import utn.frc.bda.services.EmparejamientoService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/ordenes")
@@ -30,12 +29,21 @@ public class OrdenController {
         this.emparejamientoService = emparejamientoService;
     }
 
+    @GetMapping()
+    public List<OrdenCompra> obtenerOrdenCompras(){
+        return ordenCompraService.obtenerOrdenCompras();
+    }
+
+
     @PostMapping("/compra")
     public ResponseEntity<?> crearOrdenCompra(@RequestBody NuevaOrdenCompraDTO dto, @AuthenticationPrincipal Jwt jwt) {
+
+        System.out.println("AaAAAAAAAAA");
         try {
             String userId = jwt.getSubject();
             String jwtToken = jwt.getTokenValue();
 
+            System.out.println(userId + " " + jwtToken);
             OrdenCompra orden = ordenCompraService.registrarOrdenCompra(
                     userId, 
                     dto.getSimbolo(), 
@@ -44,12 +52,12 @@ public class OrdenController {
                     jwtToken
             );
 
-            // Se guarda, y va al motor de emparejamiento
-            emparejamientoService.procesarNuevaCompra(orden);
+            System.out.println(orden);
 
+            
             return ResponseEntity.ok("Orden de compra creada y procesada exitosamente");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body("llegue aca");
         }
     }
 
