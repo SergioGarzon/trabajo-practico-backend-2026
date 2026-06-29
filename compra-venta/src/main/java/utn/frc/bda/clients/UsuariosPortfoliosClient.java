@@ -22,7 +22,7 @@ public class UsuariosPortfoliosClient {
         this.restTemplate = restTemplate;
     }
 
-    public boolean validarOrdenVenta(String simboloAccion, Long cantidad, String jwtToken) {
+    public boolean validarOrdenVenta(Long idOrdenVenta, String simboloAccion, Long cantidad, String jwtToken) {
         HttpHeaders headers = new HttpHeaders();
         // Pasamos el JWT al otro servicio para que no rebote por seguridad
         headers.set("Authorization", "Bearer " + jwtToken);
@@ -30,8 +30,9 @@ public class UsuariosPortfoliosClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> requestBody = Map.of(
+                "idOrdenVenta", idOrdenVenta,
                 "simboloAccion", simboloAccion,
-                "cantidadVender", cantidad
+                "cantidadAVender", cantidad
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
@@ -39,8 +40,8 @@ public class UsuariosPortfoliosClient {
         try {
             // Ejemplo de endpoint: /api/portfolios/validar?usuarioId=1&tipo=VENTA...
             String url = USERSERVICEVENTA + "/iniciar";
-            ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
-            return Boolean.TRUE.equals(response.getBody());
+            ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.POST, entity, Object.class);
+            return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
             // Si el servicio rechaza (400/403) o está caído, devolvemos false
             return false;
@@ -94,16 +95,16 @@ public class UsuariosPortfoliosClient {
 
         Map<String, Object> requestBody = Map.of(
                 "idOrdenCompra", idOrdenCompra,
-                "cantidadComprada", cantidadComprada,
-                "precioAcordado", precioAcordado
+                "cantidad", cantidadComprada,
+                "monto", precioAcordado
         );
-        
+
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
         try {
             String url = USERSERVICECOMPRA + "/resolver";
-            ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Boolean.class);
-            return Boolean.TRUE.equals(response.getBody());
+            ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
+            return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
             return false;
         }

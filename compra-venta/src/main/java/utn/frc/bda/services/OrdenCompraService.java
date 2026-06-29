@@ -21,30 +21,34 @@ public class OrdenCompraService implements OrdenCompraInterface {
         this.portfolioClient = portfolioClient;
     }
 
-    @Transactional
     public OrdenCompra registrarOrdenCompra(String userId, String simboloAccion, Long cantidad, Double precioUnitario, String jwtToken) {
+        OrdenCompra nuevaOrden = new OrdenCompra();
+        nuevaOrden.setUsuarioId(userId);
+        nuevaOrden.setSimboloAccion(simboloAccion);
+        nuevaOrden.setCantidad(cantidad);
+        nuevaOrden.setPrecio(precioUnitario);
+
+        // Persistimos primero para que Hibernate genere el ID autoincremental
+        nuevaOrden = repository.save(nuevaOrden);
+
         try {
-            OrdenCompra nuevaOrden = new OrdenCompra();
-            nuevaOrden.setUsuarioId(userId);
-            nuevaOrden.setSimboloAccion(simboloAccion);
-            nuevaOrden.setCantidad(cantidad);
-            nuevaOrden.setPrecio(precioUnitario);
-
-            nuevaOrden = repository.save(nuevaOrden);
-
             Double totalPagar = nuevaOrden.getCantidad() * nuevaOrden.getPrecio();
             boolean validacionOk = portfolioClient.validarOrdenCompra(nuevaOrden.getId(), totalPagar, jwtToken);
 
             if (validacionOk) {
-                return repository.save(nuevaOrden);
+                return nuevaOrden;
             } else {
-                // Si recibimos "RECHAZADO"
-                throw new RuntimeException("Operación rechazada: Fondos o acciones insuficientes en el portfolio.");
+                // Rollback manual: eliminamos la orden si el portfolio rechaza la operación
+                repository.delete(nuevaOrden);
+                throw new RuntimeException("Operación rechazada: fondos insuficientes en la billetera.");
             }
-        }catch (Exception e) {
-            throw new RuntimeException("Error al registrar ordenCompra");
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            // Rollback manual ante cualquier error de comunicación con el servicio externo
+            repository.delete(nuevaOrden);
+            throw new RuntimeException("Error al comunicarse con el servicio de billetera: " + e.getMessage());
         }
-
     }
 
     @Override

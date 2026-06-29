@@ -26,16 +26,19 @@ public class OrdenVentaService implements OrdenVentaInterfaz {
         nuevaOrden.setSimboloAccion(simbolo);
         nuevaOrden.setCantidad(cantidad);
         nuevaOrden.setPrecio(precio);
-        nuevaOrden = repository.save(nuevaOrden);
-        // Verificamos con el servicio de Billetera Virtual si tiene las acciones necesarias para le venta
-        boolean validacionOk = portfolioClient.validarOrdenVenta(nuevaOrden.getSimboloAccion(), cantidad, jwtToken);
 
-        // 2. Si recibimos el "OK"
+        // Persistimos primero para que Hibernate genere el ID autoincremental
+        nuevaOrden = repository.save(nuevaOrden);
+
+        // Verificamos con el servicio de portfolio si tiene las acciones necesarias para la venta
+        boolean validacionOk = portfolioClient.validarOrdenVenta(nuevaOrden.getId(), nuevaOrden.getSimboloAccion(), cantidad, jwtToken);
+
         if (validacionOk) {
-            return repository.save(nuevaOrden);
+            return nuevaOrden;
         } else {
-            // Si recibimos "RECHAZADO"
-            throw new RuntimeException("Operación rechazada: Fondos o acciones insuficientes en el portfolio.");
+            // Rollback manual: eliminamos la orden persistida si el portfolio rechaza la operación
+            repository.delete(nuevaOrden);
+            throw new RuntimeException("Operación rechazada: acciones insuficientes en el portfolio.");
         }
     }
 
