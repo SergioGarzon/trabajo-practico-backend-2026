@@ -1,8 +1,7 @@
 package com.utnfrc.usuario_portfolios.services;
 
-
-
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +13,8 @@ import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 @Service
 public class UsuarioService implements IUsuarioService {
 
-    private final UsuarioRepository repo;
-
-    public UsuarioService(UsuarioRepository repo) {
-        this.repo = repo;
-    }
+    @Autowired
+    private UsuarioRepository repo;
 
     public Usuarios create(Usuarios usuario) {
         return repo.save(usuario);
@@ -28,8 +24,14 @@ public class UsuarioService implements IUsuarioService {
         return repo.findAll();
     }
 
-    public Optional<Usuarios> getById(String userID) {
-        return repo.findById(userID);
+    @Override
+    public Optional<Usuarios> getById(String id) {
+        return repo.findById(id); // Busca por la clave primaria real (ID Keycloak)
+    }
+
+    @Override
+    public Optional<Usuarios> getByDni(String dni) {
+        return repo.findByDni(dni); // <-- Cambiar findById por findByDni
     }
 
     public Usuarios update(String userID, Usuarios usuario) {

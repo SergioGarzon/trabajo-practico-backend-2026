@@ -21,11 +21,7 @@ import java.util.Map;
 public class VentaAccionesController {
 
     @Autowired
-    private final IVentaAccionesService ventaAccionesService;
-
-    public VentaAccionesController(VentaAccionesService ventaAccionesService) {
-        this.ventaAccionesService = ventaAccionesService;
-    }
+    private IVentaAccionesService ventaAccionesService;
 
     @PostMapping("/iniciar")
     public ResponseEntity<SolicitudVentaDTO> iniciarVenta(

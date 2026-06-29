@@ -25,14 +25,21 @@ public class AccionController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Accion>> buscarTodos() {return ResponseEntity.ok(accionService.buscarTodos());}
+    public ResponseEntity<List<Accion>> buscarTodos() {
+        return ResponseEntity.ok(accionService.buscarTodos());
+    }
 
+    // Esta mal esto
     @PostMapping("/")
     public Accion save() {
         return accionService.crear();
     }
 
+    // No se usa nunca un GET para guardar datos
     @GetMapping("/guardar")
-    public ResponseEntity<Void> guardar() {accionService.sincronizarAcciones(); return ResponseEntity.ok().build();}
+    public ResponseEntity<Void> guardar() {
+        accionService.sincronizarAcciones(); 
+        return ResponseEntity.ok().build();
+    }
 
 }

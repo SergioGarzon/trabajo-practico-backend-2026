@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class VentaAccionesService implements IVentaAccionesService {
 
-    private final UsuariosServices usuariosServices;
+    private final UsuarioService usuariosServices;
     private final OrdenVentaRepository ordenVentaRepository;
     private final BilleteraVirtualRepository billeteraRepository;
     private final PortfolioRepository portfolioRepository;
@@ -31,7 +31,7 @@ public class VentaAccionesService implements IVentaAccionesService {
     @Autowired
     private PortfolioService portfolioService;
 
-    public VentaAccionesService(UsuariosServices usuariosServices, OrdenVentaRepository ordenVentaRepository, BilleteraVirtualRepository billeteraRepository, PortfolioRepository portfolioRepository) {
+    public VentaAccionesService(UsuarioService usuariosServices, OrdenVentaRepository ordenVentaRepository, BilleteraVirtualRepository billeteraRepository, PortfolioRepository portfolioRepository) {
         this.usuariosServices = usuariosServices;
         this.ordenVentaRepository = ordenVentaRepository;
         this.billeteraRepository = billeteraRepository;

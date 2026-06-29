@@ -3,7 +3,7 @@ package com.utnfrc.usuario_portfolios.services;
 import com.utnfrc.usuario_portfolios.dtos.RegistroDTO;
 import com.utnfrc.usuario_portfolios.models.Portfolio;
 import com.utnfrc.usuario_portfolios.models.Usuarios;
-import com.utnfrc.usuario_portfolios.repositories.UsuariosRepositories;
+import com.utnfrc.usuario_portfolios.repositories.UsuarioRepository;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -18,12 +18,12 @@ import java.util.List;
 public class RegistroService implements IRegistroService {
 
     private final Keycloak keycloak;
-    private final UsuariosRepositories usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
     private final BilleteraVirtualService billeteraService;
 
     private final String REALM_NAME = "users-tp";
 
-    public RegistroService(Keycloak keycloak, UsuariosRepositories usuarioRepository, BilleteraVirtualService billeteraService) {
+    public RegistroService(Keycloak keycloak, UsuarioRepository usuarioRepository, BilleteraVirtualService billeteraService) {
         this.keycloak = keycloak;
         this.usuarioRepository = usuarioRepository;
         this.billeteraService = billeteraService;

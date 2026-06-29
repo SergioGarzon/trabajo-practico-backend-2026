@@ -5,7 +5,7 @@ import com.utnfrc.usuario_portfolios.excepciones.*;
 import com.utnfrc.usuario_portfolios.models.*;
 import com.utnfrc.usuario_portfolios.repositories.BilleteraVirtualRepository;
 import com.utnfrc.usuario_portfolios.repositories.ReservaSaldoRepository;
-import com.utnfrc.usuario_portfolios.repositories.UsuariosRepositories;
+import com.utnfrc.usuario_portfolios.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,17 +17,17 @@ import java.util.Optional;
 @Service
 public class BilleteraVirtualService implements IBilleteraVirtualService {
 
-    private final UsuariosServices usuariosService;
+    private final UsuarioService usuariosService;
     private final BilleteraVirtualRepository bvRepository;
     private final SecureRandom random = new SecureRandom();
-    private final UsuariosRepositories usuariosRepositories;
+    private final UsuarioRepository usuariosRepositories;
     private final ReservaSaldoRepository reservaRepository;
     private final PortfolioService portfolioService;
 
     @Autowired
     private AccionService accionService;
 
-    public BilleteraVirtualService(UsuariosServices usuariosService, PortfolioService portfolioService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository) {
+    public BilleteraVirtualService(UsuarioService usuariosService, PortfolioService portfolioService, BilleteraVirtualRepository bvRepository, UsuarioRepository usuariosRepositories, ReservaSaldoRepository reservaRepository) {
         this.usuariosRepositories = usuariosRepositories;
         this.usuariosService = usuariosService;
         this.bvRepository = bvRepository;

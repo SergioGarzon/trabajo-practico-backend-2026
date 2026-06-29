@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -23,13 +24,11 @@ import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
 
-    private final IUsuarioService service;
-    private final IRegistroService registroService;
+    @Autowired
+    private IUsuarioService service;
+    @Autowired
+    private IRegistroService registroService;
 
-    public UsuarioController(UsuarioService service, RegistroService registroService) {
-        this.service = service;
-        this.registroService = registroService;
-    }
 
     @PostMapping("/registro")
     public ResponseEntity<Usuarios> create(@RequestBody RegistroDTO dto) {
@@ -43,12 +42,15 @@ public class UsuarioController {
     }
 
     @GetMapping("/{dni}")
-    public ResponseEntity<Usuarios> getById(@AuthenticationPrincipal Jwt jwt) {
-        String userID = jwt.getSubject();
-        return service.getById(userID)
+    public ResponseEntity<Usuarios> getByDni(
+            @PathVariable String dni, 
+            @AuthenticationPrincipal Jwt jwt) { 
+                
+        return service.getByDni(dni) 
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario con DNI " + dni + " no encontrado"));
     }
+
 
     @PutMapping("/update")
     public ResponseEntity<Usuarios> update(@AuthenticationPrincipal Jwt jwt, @RequestBody Usuarios usuario) {
@@ -58,6 +60,7 @@ public class UsuarioController {
         return ResponseEntity.ok(updated);
     }
 
+    @DeleteMapping("/eliminar")
     public ResponseEntity<Void> delete(@AuthenticationPrincipal Jwt jwt) {
         String userID = jwt.getSubject();
         validarUsuarioExiste(userID);

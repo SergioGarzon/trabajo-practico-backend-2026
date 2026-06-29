@@ -37,7 +37,7 @@ public class BilleteraVirtualController {
 
     @GetMapping()
     public ResponseEntity<List<BilleteraVirtual>> obtenerBilleteraVirtuales() {
-        billeteraVirtualService.findAllBV();
+        //billeteraVirtualService.findAllBV();
         return ResponseEntity.ok().body(billeteraVirtualService.findAllBV());
     }
 

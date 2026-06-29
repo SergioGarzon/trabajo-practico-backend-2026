@@ -6,14 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-import org.springframework.stereotype.Service;
-
+@Entity
+@Table(name = "ACCIONES")
 @Getter 
 @Setter
 @NoArgsConstructor
-
-@Entity
-@Table(name = "ACCIONES")
 public class Accion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
