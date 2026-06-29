@@ -74,6 +74,8 @@ public class RegistroService implements IRegistroService {
 
         Usuarios usuarioGuardado = usuarioRepository.save(nuevoUsuario);
 
+        billeteraService.createBV(usuarioGuardado.getId());
+
         return usuarioGuardado;
     }
 }

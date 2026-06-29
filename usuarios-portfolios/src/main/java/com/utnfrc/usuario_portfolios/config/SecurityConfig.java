@@ -16,7 +16,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/usuarios/registro").permitAll()
+                        .requestMatchers("/api/billetera/").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/api/usuarios").permitAll()
                         .requestMatchers("/api/ventas").permitAll()
                         // Cualquier otra petición (como ingresar dinero) exige token válido
                         .anyRequest().authenticated()
