@@ -23,9 +23,13 @@ public class OrdenCompra {
     @JoinColumn(name = "billetera_id")
     private BilleteraVirtual billetera;
 
+    public OrdenCompra() {}
 
     public OrdenCompra(Long idOrdenCompra) {
         this.id = idOrdenCompra;
         this.estado = "PENDIENTE";
-    }    
+    }
+
+
+
 }

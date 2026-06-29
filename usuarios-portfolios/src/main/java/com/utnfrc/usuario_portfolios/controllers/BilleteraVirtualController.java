@@ -70,15 +70,11 @@ public class BilleteraVirtualController {
             @RequestBody SolicitudDineroDTO dto) {
 
         try{
-
             String userId = jwt.getSubject();
-            System.out.println(dto.getIdOrdenCompra() + " " + dto.getMonto() +" "+ userId + " " + dto.getIdOrdenCompra());
             billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto(), dto.getIdOrdenCompra());
-            System.out.println("estas aca");
             return ResponseEntity.ok(true);
 
         }catch(Exception e){
-            System.out.println("estas aca?");
             return ResponseEntity.ok(false);
         }
     }
