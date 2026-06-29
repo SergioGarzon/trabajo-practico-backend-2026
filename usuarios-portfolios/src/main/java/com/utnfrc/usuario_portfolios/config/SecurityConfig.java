@@ -17,7 +17,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/usuarios/registro").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/ventas").permitAll()
+                        .requestMatchers("/api/ventas/**").permitAll()
+                        // Permite que el Motor de Emparejamiento interno llame a /resolver sin token
+                        .requestMatchers("/api/billetera/operacion/resolver").permitAll()
                         // Cualquier otra petición (como ingresar dinero) exige token válido
                         .anyRequest().authenticated()
                 )
