@@ -15,7 +15,7 @@ local.properties
 .recommenders
 
 # Ignoramos lo de grafana
-data/grafana/
+data
 
 # External tool builders
 .externalToolBuilders/
