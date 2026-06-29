@@ -58,7 +58,7 @@ public class VentaAccionesController {
 
     @PutMapping("/cancelar/{idOrden}")
     public ResponseEntity<Map<String, String>> cancelarVenta(
-            @PathVariable String idOrden) {
+            @PathVariable Long idOrden) {
 
         ventaAccionesService.cancelarOrdenVenta(idOrden);
 

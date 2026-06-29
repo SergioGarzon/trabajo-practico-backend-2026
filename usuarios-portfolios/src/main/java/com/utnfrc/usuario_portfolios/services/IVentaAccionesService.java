@@ -13,5 +13,5 @@ public interface IVentaAccionesService {
 
     public void procesarVenta(ResolucionVentaDTO dto);
 
-    public void cancelarOrdenVenta(String idOrdenVenta);
+    public void cancelarOrdenVenta(Long idOrdenVenta);
 }

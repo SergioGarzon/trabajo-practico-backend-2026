@@ -109,7 +109,7 @@ public class VentaAccionesService implements IVentaAccionesService {
 
 
     @Transactional
-    public void cancelarOrdenVenta(String idOrdenVenta) {
+    public void cancelarOrdenVenta(Long idOrdenVenta) {
         OrdenVenta orden = ordenVentaRepository.findById(idOrdenVenta)
                 .orElseThrow(() -> new ResourceNotFoundException("Orden no encontrada"));
 
