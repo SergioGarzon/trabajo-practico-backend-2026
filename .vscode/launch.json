@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "utn.frc.bda.Main",
+            "projectName": "compra-venta"
+        },
+        {
+            "type": "java",
             "name": "ServicioYahooApiFinanceApplication",
             "request": "launch",
             "mainClass": "com.example.yahooapifinance.ServicioYahooApiFinanceApplication",

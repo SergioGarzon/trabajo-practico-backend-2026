@@ -5,11 +5,13 @@ import java.util.UUID;
 
 import lombok.Setter;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "ordenes_venta")
 @Setter
 @Getter
+@NoArgsConstructor
 public class OrdenVenta {
 
     @Id

@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/*.jar app.jar
 
 # Exponer el puerto
-EXPOSE 8083
+EXPOSE 8089
 
 # Ejecutar la aplicación
 ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]

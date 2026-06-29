@@ -20,7 +20,8 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
     networks:
       - tp-network
     restart: unless-stopped
@@ -41,6 +42,12 @@ services:
     networks:
       - tp-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   # --- 3. TU BACKEND DE JAVA ---
   usuarios-portfolios-service:
@@ -59,8 +66,10 @@ services:
       - MYSQL_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
-      - mysql-db
-      - keycloak
+      mysql-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
     networks:
       - tp-network
     restart: unless-stopped
@@ -96,6 +105,31 @@ services:
     networks:
       - tp-network
 
+  # --- 6. TU BACKEND DE COMPRA-VENTA ---
+  compra-venta-service:
+    build:
+      context: ../../compra-venta
+      dockerfile: Dockerfile
+    container_name: tp-compra-venta
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8089
+      - MYSQL_HOST=mysql-db
+      - MYSQL_DATABASE=compras_ventas_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - tp-network
+    restart: unless-stopped
+
   api-gateway:
     build:
       context: ../../api-gateway
@@ -108,8 +142,10 @@ services:
       # Podés pasarle variables para configurar dinámicamente las rutas si tu application.properties de Docker las usa:
       # - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8180/realms/users-tp
     depends_on:
-      - mysql-db
-      - keycloak
+      mysql-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
     networks:
       - tp-network
     restart: unless-stopped
