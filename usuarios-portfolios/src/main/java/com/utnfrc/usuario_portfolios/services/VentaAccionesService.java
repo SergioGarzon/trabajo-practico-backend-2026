@@ -1,11 +1,21 @@
 package com.utnfrc.usuario_portfolios.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.utnfrc.usuario_portfolios.dtos.ResolucionVentaDTO;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudVentaDTO;
 import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
-import com.utnfrc.usuario_portfolios.models.*;
-import com.utnfrc.usuario_portfolios.repositories.*;
+import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
+import com.utnfrc.usuario_portfolios.models.ItemPortfolio;
+import com.utnfrc.usuario_portfolios.models.OrdenVenta;
+import com.utnfrc.usuario_portfolios.models.Portfolio;
+import com.utnfrc.usuario_portfolios.models.Usuarios;
+import com.utnfrc.usuario_portfolios.repositories.BilleteraVirtualRepository;
+import com.utnfrc.usuario_portfolios.repositories.OrdenVentaRepository;
+import com.utnfrc.usuario_portfolios.repositories.PortfolioRepository;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,7 +119,7 @@ public class VentaAccionesService implements IVentaAccionesService {
 
 
     @Transactional
-    public void cancelarOrdenVenta(Long idOrdenVenta) {
+    public void cancelarOrdenVenta(String idOrdenVenta) {
         OrdenVenta orden = ordenVentaRepository.findById(idOrdenVenta)
                 .orElseThrow(() -> new ResourceNotFoundException("Orden no encontrada"));
 

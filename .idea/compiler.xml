@@ -11,15 +11,15 @@
         <module name="servicio-emparejamiento-ordenes-compra-venta" />
         <module name="servicio-yahoo-api-finance" />
       </profile>
-      <profile name="Annotation profile for usuarios-portfolios" enabled="true">
+      <profile name="Annotation profile for compra-venta" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
-        <module name="usuarios-portfolios" />
         <module name="compra-venta" />
+        <module name="usuarios-portfolios" />
       </profile>
     </annotationProcessing>
   </component>
