@@ -77,6 +77,7 @@ public class UsuarioController {
         return ResponseEntity.ok(updated);
     }
 
+    @DeleteMapping("/eliminar")
     public ResponseEntity<Void> delete(@AuthenticationPrincipal Jwt jwt) {
         String userID = jwt.getSubject();
         validarUsuarioExiste(userID);

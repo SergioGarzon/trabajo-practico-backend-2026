@@ -20,32 +20,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(BilleteraVituralException.class)
-    public ResponseEntity<ErrorResponse> handleBilleteraExistente(BilleteraVituralException ex) {
+    // Para limpiar codigo repetido, se hace un solo método
+    @ExceptionHandler({
+        BilleteraVituralException.class, 
+        TransaccionInversionException.class, 
+        PortfolioException.class
+    })
+    public ResponseEntity<ErrorResponse> handleErroresNegocio(Exception ex) {
         ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Operacion Invalida",
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(TransaccionInversionException.class)
-    public ResponseEntity<ErrorResponse> handleTransaccionInversion(TransaccionInversionException ex) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Operacion Invalida",
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PortfolioException.class)
-    public ResponseEntity<ErrorResponse> handlePortfolio(PortfolioException ex) {
-        ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Operacion Invalida",
-                ex.getMessage()
+            HttpStatus.BAD_REQUEST.value(),
+            "Operación Inválida",
+            ex.getMessage()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
