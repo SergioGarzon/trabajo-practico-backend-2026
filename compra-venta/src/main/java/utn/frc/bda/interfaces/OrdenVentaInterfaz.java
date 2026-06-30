@@ -4,5 +4,5 @@ import utn.frc.bda.models.OrdenVenta;
 
 public interface OrdenVentaInterfaz {
     OrdenVenta registrarOrdenVenta(String usuarioId, String simbolo, Long cantidad, Double precio, String jwtToken);
-    boolean realizarVenta(Long idOrdenVenta, Double dineroTotal, Long cantidadVendida);
+    boolean realizarVenta(Long idOrdenVenta, Double dineroTotal, Long cantidadVendida, String usuarioId);
 }
