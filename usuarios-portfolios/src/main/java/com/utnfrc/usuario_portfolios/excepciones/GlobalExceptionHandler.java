@@ -1,4 +1,4 @@
-package com.utnfrc.usuario_portfolios.controllers;
+package com.utnfrc.usuario_portfolios.excepciones;
 
 import com.utnfrc.usuario_portfolios.excepciones.*;
 import org.springframework.http.HttpStatus;
