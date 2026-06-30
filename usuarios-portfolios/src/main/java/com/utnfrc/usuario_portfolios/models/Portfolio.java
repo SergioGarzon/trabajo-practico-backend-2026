@@ -31,6 +31,8 @@ public class Portfolio implements Serializable {
     @JsonManagedReference
     private List<ItemPortfolio> items = new ArrayList<>();
 
+
+
     public void addAccion(Accion accion, Long cantidadComprada) {
         ItemPortfolio item = new ItemPortfolio();
         item.setAccion(accion);

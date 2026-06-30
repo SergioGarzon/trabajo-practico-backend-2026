@@ -30,8 +30,13 @@ public class BilleteraVirtualController {
 
     @GetMapping("/")
     public ResponseEntity<?> iniciar(){
-        creadorUsers.iniciarPrograma();
-        return ResponseEntity.ok().build();
+       try {
+
+           creadorUsers.iniciarPrograma();
+           return ResponseEntity.ok().build();
+       }catch (Exception e){
+           return ResponseEntity.badRequest().body("Fallo la iniciar el programa" + e.getMessage());
+       }
     }
 
     @PostMapping("/crear")

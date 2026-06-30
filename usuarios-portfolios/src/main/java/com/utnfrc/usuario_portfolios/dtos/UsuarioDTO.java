@@ -12,7 +12,6 @@ import lombok.ToString;
 public class UsuarioDTO {
     private String Nombre;
     private String Apellido;
-    private String Email;
     private String username;
     private Double dineroTotal;
     private Double dineroLibre;

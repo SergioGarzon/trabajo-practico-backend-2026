@@ -70,6 +70,8 @@ public class RegistroService implements IRegistroService {
         nuevoUsuario.setDomicilio(dto.getDomicilio());
         nuevoUsuario.setRol(dto.getRol());
         Portfolio portfolio = new Portfolio();
+        portfolio.setDescripcion("");
+        portfolio.setTitulo("Portfolio de personal");
         nuevoUsuario.setPortfolio(portfolio);
 
         Usuarios usuarioGuardado = usuarioRepository.save(nuevoUsuario);

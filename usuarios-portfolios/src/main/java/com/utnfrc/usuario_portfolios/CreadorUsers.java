@@ -44,7 +44,7 @@ public class CreadorUsers {
             registroDTO.setApellido(apellido);
             // Agregamos el índice al final del email y username para garantizar que sean únicos
             registroDTO.setEmail(nombre.toLowerCase() + "." + apellido.toLowerCase() + i + "@ejemplo.com");
-            registroDTO.setPassword("Pass" + (123));
+            registroDTO.setPassword("123");
             registroDTO.setRol("USER");
             registroDTO.setDni(20000000L + random.nextInt(20000000)); // DNI aleatorio entre 20M y 40M
             registroDTO.setUsername(nombre.toLowerCase() + apellido.toLowerCase() + i);
