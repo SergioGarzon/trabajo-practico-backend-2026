@@ -8,6 +8,7 @@ public class SolicitudDineroDTO {
     private Long cantidad;
     private String mensaje;
     private String usuarioId; // ID del usuario pasado explícitamente (comunicación máquina-a-máquina)
+    private Double montoSobrante; // Dinero ahorrado en la transacción si se compró más barato
 
     // Getters y Setters
     public Double getMonto() { return monto; }
@@ -24,4 +25,6 @@ public class SolicitudDineroDTO {
     public void setMensaje(String mensaje) { this.mensaje = mensaje; }
     public String getUsuarioId() { return usuarioId; }
     public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }
+    public Double getMontoSobrante() { return montoSobrante; }
+    public void setMontoSobrante(Double montoSobrante) { this.montoSobrante = montoSobrante; }
 }

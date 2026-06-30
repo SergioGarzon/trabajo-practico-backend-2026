@@ -57,7 +57,7 @@ public class OrdenCompraService implements OrdenCompraInterface {
         // El Motor de Emparejamiento usa directamente EmparejamientoService, que pasa
         // usuarioId y simboloAccion. Aquí usamos strings vacíos como fallback
         // ya que este path no es invocado por el @Scheduled.
-        return portfolioClient.resolverOrdenCompra(idOrdenCompra, cantidad, precio, "", "");
+        return portfolioClient.resolverOrdenCompra(idOrdenCompra, cantidad, precio, "", "", 0.0);
     }
 
     public List<OrdenCompra> obtenerOrdenCompras() {

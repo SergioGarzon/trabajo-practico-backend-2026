@@ -143,12 +143,18 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
         Optional<Usuarios> user = usuariosService.getById(userID);
         if (user.isEmpty()) {throw new BilleteraVituralException("Usuario no encontrado");}
         BilleteraVirtual bv = reserva.getBilletera();
-        Double monto = reserva.getMonto();
+        Double montoGastadoReal = dto.getMonto();
+        Double montoSobrante = dto.getMontoSobrante() != null ? dto.getMontoSobrante() : 0.0;
+        Double montoADesbloquear = montoGastadoReal + montoSobrante;
 
-        bv.setDineroBloqueado(bv.getDineroBloqueado() - monto);
+        bv.setDineroBloqueado(bv.getDineroBloqueado() - montoADesbloquear);
+        reserva.setMonto(reserva.getMonto() - montoADesbloquear);
 
         if ("CONFIRMAR".equalsIgnoreCase(dto.getEstadoAccion())) {
-            bv.setDineroInvertido(bv.getDineroInvertido() + monto);
+            bv.setDineroInvertido(bv.getDineroInvertido() + montoGastadoReal);
+            if (montoSobrante > 0) {
+                bv.setDineroLibre(bv.getDineroLibre() + montoSobrante);
+            }
             Portfolio portID = user.get().getPortfolio();
             if (portID == null) {throw new TransaccionInversionException("El portfolio no fue encontrado");}
             Accion accion = accionService.buscarPorSimbolo(dto.getSimbolo());
@@ -156,7 +162,7 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
             portfolioService.agregarAccion(portID.getId(), accion, dto.getCantidad());
             reserva.setEstado("CONFIRMADA");
         } else if ("RECHAZAR".equalsIgnoreCase(dto.getEstadoAccion())) {
-            bv.setDineroLibre(bv.getDineroLibre() + monto);
+            bv.setDineroLibre(bv.getDineroLibre() + montoADesbloquear);
             reserva.setEstado("RECHAZADA");
         } else {
             throw new IllegalArgumentException("Accion no reconocida.");

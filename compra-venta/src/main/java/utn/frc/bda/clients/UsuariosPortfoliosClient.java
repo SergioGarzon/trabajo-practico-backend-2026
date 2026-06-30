@@ -90,7 +90,7 @@ public class UsuariosPortfoliosClient {
     }
 
 
-    public boolean resolverOrdenCompra(Long idOrdenCompra, Long cantidadComprada, Double precioAcordado, String usuarioId, String simboloAccion) {
+    public boolean resolverOrdenCompra(Long idOrdenCompra, Long cantidadComprada, Double precioAcordado, String usuarioId, String simboloAccion, Double montoSobrante) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -100,7 +100,8 @@ public class UsuariosPortfoliosClient {
                 "monto", precioAcordado,
                 "usuarioId", usuarioId,
                 "estadoAccion", "CONFIRMAR",  // Un match siempre es una confirmación
-                "simbolo", simboloAccion
+                "simbolo", simboloAccion,
+                "montoSobrante", montoSobrante != null ? montoSobrante : 0.0
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
