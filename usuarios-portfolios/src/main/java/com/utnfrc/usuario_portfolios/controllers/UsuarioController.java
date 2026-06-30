@@ -2,6 +2,9 @@ package com.utnfrc.usuario_portfolios.controllers;
 
 
 
+import com.utnfrc.usuario_portfolios.dtos.UsuarioDTO;
+import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
+import com.utnfrc.usuario_portfolios.models.Portfolio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,8 +41,24 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuarios>> all() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<List<UsuarioDTO>> all() {
+        List<UsuarioDTO> lUser = service.getAll().stream()
+                .map(usuario -> {
+                    BilleteraVirtual bv = usuario.getBilleteraVirtual();
+                    Portfolio portfolio = usuario.getPortfolio();
+
+                    UsuarioDTO dto = new UsuarioDTO();
+                    dto.setNombre(usuario.getNombre());
+                    dto.setApellido(usuario.getApellido());
+                    dto.setUsername(usuario.getNombre()+usuario.getApellido());
+                    dto.setDineroLibre(bv.getDineroLibre());
+                    dto.setDineroInvertido(bv.getDineroInvertido());
+                    dto.setDineroBloqueado(bv.getDineroBloqueado());
+                    dto.setDineroTotal(bv.getDineroLibre() +  bv.getDineroInvertido() + bv.getDineroBloqueado());
+                    dto.setPortfolio(portfolio);
+                    return dto;
+                }).toList();
+        return ResponseEntity.ok(lUser);
     }
 
     @GetMapping("/{dni}")
