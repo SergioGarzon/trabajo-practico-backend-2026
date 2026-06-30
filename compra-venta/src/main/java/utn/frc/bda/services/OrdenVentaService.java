@@ -42,8 +42,8 @@ public class OrdenVentaService implements OrdenVentaInterfaz {
         }
     }
 
-    public boolean realizarVenta(Long idOrdenVenta, Double dineroObtenido, Long cantidadVendida) {
-        boolean compraRealizada = portfolioClient.procesarVenta(idOrdenVenta, dineroObtenido, cantidadVendida);
+    public boolean realizarVenta(Long idOrdenVenta, Double dineroObtenido, Long cantidadVendida, String usuarioId) {
+        boolean compraRealizada = portfolioClient.procesarVenta(idOrdenVenta, dineroObtenido, cantidadVendida, usuarioId);
         return  compraRealizada;
     }
 }

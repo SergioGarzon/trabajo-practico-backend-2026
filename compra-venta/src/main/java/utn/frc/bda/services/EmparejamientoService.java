@@ -186,7 +186,7 @@ public class EmparejamientoService {
                 ordenVenta.setEstado(ordenVenta.getCantidad() == 0 ? "COMPLETADA" : "PARCIAL");
 
                 Double dineroTotal = cantidadAComprar * precioAcordado;
-                ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar);
+                ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar, ordenVenta.getUsuarioId());
                 ordenCompraInterface.realizarCompra(ordenCompra.getId(), cantidadAComprar, precioAcordado);
 
             } else {
@@ -196,7 +196,7 @@ public class EmparejamientoService {
                 ordenVenta.setCantidad(0L);
 
                 Double dineroTotal = cantidadAComprar * precioAcordado;
-                ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar);
+                ordenVentaInterfaz.realizarVenta(ordenVenta.getId(), dineroTotal, cantidadAComprar, ordenVenta.getUsuarioId());
                 ordenCompraInterface.realizarCompra(ordenCompra.getId(), cantidadAComprar, precioAcordado);
 
                 ordenVenta.setEstado("COMPLETADA");
