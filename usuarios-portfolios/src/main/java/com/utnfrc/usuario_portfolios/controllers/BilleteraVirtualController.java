@@ -82,10 +82,10 @@ public class BilleteraVirtualController {
 
     @PutMapping("/operacion/resolver")
     public ResponseEntity<SolicitudDineroDTO> resolverOperacion(
-            @AuthenticationPrincipal Jwt jwt,
             @RequestBody SolicitudDineroDTO dto) {
 
-        String userId = jwt.getSubject();
+        // El usuarioId viaja en el DTO (patrón máquina-a-máquina, sin token JWT)
+        String userId = dto.getUsuarioId();
         BilleteraVirtual bvActualizada = billeteraVirtualService.procesarRespuestaExterna(userId, dto);
 
         dto.setMensaje("Se realizo la compra exitosamente");

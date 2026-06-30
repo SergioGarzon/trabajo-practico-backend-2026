@@ -53,7 +53,11 @@ public class OrdenCompraService implements OrdenCompraInterface {
 
     @Override
     public boolean realizarCompra(Long idOrdenCompra, Long cantidad, Double precio) {
-        return portfolioClient.resolverOrdenCompra(idOrdenCompra, cantidad, precio);
+        // Nota: este método es parte de la interfaz OrdenCompraInterface (flujo sincrónico).
+        // El Motor de Emparejamiento usa directamente EmparejamientoService, que pasa
+        // usuarioId y simboloAccion. Aquí usamos strings vacíos como fallback
+        // ya que este path no es invocado por el @Scheduled.
+        return portfolioClient.resolverOrdenCompra(idOrdenCompra, cantidad, precio, "", "");
     }
 
     public List<OrdenCompra> obtenerOrdenCompras() {

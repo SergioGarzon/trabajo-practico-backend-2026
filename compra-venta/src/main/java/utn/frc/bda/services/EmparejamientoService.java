@@ -101,10 +101,11 @@ public class EmparejamientoService {
 
                 // 4. Llamar a los clientes del microservicio de portfolios/billetera
                 boolean compraOk = portfolioClient.resolverOrdenCompra(
-                        compra.getId(), cantidadAIntercambiar, montoTotal);
+                        compra.getId(), cantidadAIntercambiar, montoTotal,
+                        compra.getUsuarioId(), compra.getSimboloAccion());
 
                 boolean ventaOk = portfolioClient.procesarVenta(
-                        venta.getId(), montoTotal, cantidadAIntercambiar);
+                        venta.getId(), montoTotal, cantidadAIntercambiar, venta.getUsuarioId());
 
                 // 5. Solo persistir si AMBAS operaciones remotas fueron exitosas
                 if (compraOk && ventaOk) {

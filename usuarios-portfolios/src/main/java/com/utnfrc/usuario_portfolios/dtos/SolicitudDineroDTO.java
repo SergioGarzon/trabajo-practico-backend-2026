@@ -7,6 +7,7 @@ public class SolicitudDineroDTO {
     private String simbolo;
     private Long cantidad;
     private String mensaje;
+    private String usuarioId; // ID del usuario pasado explícitamente (comunicación máquina-a-máquina)
 
     // Getters y Setters
     public Double getMonto() { return monto; }
@@ -21,4 +22,6 @@ public class SolicitudDineroDTO {
     public void setIdOrdenCompra(Long idOrdenCompra) { this.idOrdenCompra = idOrdenCompra; }
     public String getMensaje() { return mensaje; }
     public void setMensaje(String mensaje) { this.mensaje = mensaje; }
-}
+    public String getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }
+}

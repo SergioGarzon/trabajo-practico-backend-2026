@@ -48,13 +48,14 @@ public class UsuariosPortfoliosClient {
         }
     }
 
-    public boolean procesarVenta(Long idOrdenVenta, Double montoGanado, Long cantidadVendida ) {
+    public boolean procesarVenta(Long idOrdenVenta, Double montoGanado, Long cantidadVendida, String usuarioId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         Map<String, Object> requestBody = Map.of(
             "idOrdenVenta", idOrdenVenta,
             "dineroObtenido", montoGanado,
-            "cantidadVendida", cantidadVendida
+            "cantidadVendida", cantidadVendida,
+            "usuarioId", usuarioId
         );
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
         try {
@@ -89,14 +90,17 @@ public class UsuariosPortfoliosClient {
     }
 
 
-    public boolean resolverOrdenCompra(Long idOrdenCompra, Long cantidadComprada, Double precioAcordado) {
+    public boolean resolverOrdenCompra(Long idOrdenCompra, Long cantidadComprada, Double precioAcordado, String usuarioId, String simboloAccion) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         Map<String, Object> requestBody = Map.of(
                 "idOrdenCompra", idOrdenCompra,
                 "cantidad", cantidadComprada,
-                "monto", precioAcordado
+                "monto", precioAcordado,
+                "usuarioId", usuarioId,
+                "estadoAccion", "CONFIRMAR",  // Un match siempre es una confirmación
+                "simbolo", simboloAccion
         );
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
