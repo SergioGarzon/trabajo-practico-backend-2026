@@ -1,5 +1,6 @@
 package com.utnfrc.usuario_portfolios.services;
 
+import com.utnfrc.usuario_portfolios.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,11 +8,6 @@ import com.utnfrc.usuario_portfolios.dtos.ResolucionVentaDTO;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudVentaDTO;
 import com.utnfrc.usuario_portfolios.excepciones.ResourceNotFoundException;
 import com.utnfrc.usuario_portfolios.excepciones.TransaccionInversionException;
-import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
-import com.utnfrc.usuario_portfolios.models.ItemPortfolio;
-import com.utnfrc.usuario_portfolios.models.OrdenVenta;
-import com.utnfrc.usuario_portfolios.models.Portfolio;
-import com.utnfrc.usuario_portfolios.models.Usuarios;
 import com.utnfrc.usuario_portfolios.repositories.BilleteraVirtualRepository;
 import com.utnfrc.usuario_portfolios.repositories.OrdenVentaRepository;
 import com.utnfrc.usuario_portfolios.repositories.PortfolioRepository;
@@ -27,15 +23,17 @@ public class VentaAccionesService implements IVentaAccionesService {
     private final OrdenVentaRepository ordenVentaRepository;
     private final BilleteraVirtualRepository billeteraRepository;
     private final PortfolioRepository portfolioRepository;
+    private final RegistroOperacionService registroOperacionService;
 
     @Autowired
     private PortfolioService portfolioService;
 
-    public VentaAccionesService(UsuariosServices usuariosServices, OrdenVentaRepository ordenVentaRepository, BilleteraVirtualRepository billeteraRepository, PortfolioRepository portfolioRepository) {
+    public VentaAccionesService(RegistroOperacionService registroOperacionService, UsuariosServices usuariosServices, OrdenVentaRepository ordenVentaRepository, BilleteraVirtualRepository billeteraRepository, PortfolioRepository portfolioRepository) {
         this.usuariosServices = usuariosServices;
         this.ordenVentaRepository = ordenVentaRepository;
         this.billeteraRepository = billeteraRepository;
         this.portfolioRepository = portfolioRepository;
+        this.registroOperacionService = registroOperacionService;
     }
 
 
@@ -68,7 +66,12 @@ public class VentaAccionesService implements IVentaAccionesService {
 
         ordenVentaRepository.save(orden);
         portfolioRepository.save(portfolio);
-
+        registroOperacionService.registrar(
+                usuario,
+                TipoOperacion.BLOQUEAR_ACCION,
+                "Inicio de venta de accion",
+                0D
+        );
         return orden;
     }
 
@@ -114,6 +117,13 @@ public class VentaAccionesService implements IVentaAccionesService {
 
         billeteraRepository.save(bv);
         ordenVentaRepository.save(orden);
+
+        registroOperacionService.registrar(
+                bv.getUsuario(),
+                TipoOperacion.BLOQUEAR_ACCION,
+                "Venta de accion completada",
+                dto.getDineroObtenido()
+        );
 
     }
 

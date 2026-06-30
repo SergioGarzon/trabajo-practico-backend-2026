@@ -16,9 +16,9 @@ public interface IBilleteraVirtualService {
 
     void deleteBV(Long dni);
 
-    BilleteraVirtual retirarDinero(String idUsuario, Long cantidad);
+    BilleteraVirtual retirarDinero(String idUsuario, Double cantidad);
 
-    BilleteraVirtual ingresarDinero(String idUsuario, Long cantidad);
+    BilleteraVirtual ingresarDinero(String idUsuario, Double cantidad);
 
     Long solicitarYBloquearDinero(String keycloakUserId, Double monto, Long idOrdenCompra);
 

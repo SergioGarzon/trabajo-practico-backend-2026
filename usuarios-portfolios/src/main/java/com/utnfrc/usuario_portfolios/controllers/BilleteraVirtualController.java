@@ -1,5 +1,6 @@
 package com.utnfrc.usuario_portfolios.controllers;
 
+import com.utnfrc.usuario_portfolios.CreadorUsers;
 import com.utnfrc.usuario_portfolios.dtos.SolicitudDineroDTO;
 import com.utnfrc.usuario_portfolios.models.BilleteraVirtual;
 import com.utnfrc.usuario_portfolios.services.BilleteraVirtualService;
@@ -20,11 +21,18 @@ import java.util.Map;
 public class BilleteraVirtualController {
 
     private final IBilleteraVirtualService billeteraVirtualService;
+    private final CreadorUsers creadorUsers;
 
-    public BilleteraVirtualController(BilleteraVirtualService billeteraVirtualService) {
+    public BilleteraVirtualController(BilleteraVirtualService billeteraVirtualService,  CreadorUsers creadorUsers) {
         this.billeteraVirtualService = billeteraVirtualService;
+        this.creadorUsers = creadorUsers;
     }
 
+    @GetMapping("/")
+    public ResponseEntity<?> iniciar(){
+        creadorUsers.iniciarPrograma();
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/crear")
     public ResponseEntity<BilleteraVirtual> crearBilleteraVirtual(
@@ -44,7 +52,7 @@ public class BilleteraVirtualController {
     @PutMapping("/retirar")
     public ResponseEntity<BilleteraVirtual> retirarDinero(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody Long cantidadDinero) {
+            @RequestBody Double cantidadDinero) {
 
         String usuarioId = jwt.getSubject();
 
@@ -56,7 +64,7 @@ public class BilleteraVirtualController {
     @PutMapping("/ingresar")
     public ResponseEntity<BilleteraVirtual> ingresarDinero(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody Long cantidadDinero)
+            @RequestBody Double cantidadDinero)
     {
         String userId = jwt.getSubject();
         BilleteraVirtual bvAct = billeteraVirtualService.ingresarDinero(userId, cantidadDinero);
@@ -72,6 +80,7 @@ public class BilleteraVirtualController {
         try{
             String userId = jwt.getSubject();
             billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto(), dto.getIdOrdenCompra());
+
             return ResponseEntity.ok(true);
 
         }catch(Exception e){

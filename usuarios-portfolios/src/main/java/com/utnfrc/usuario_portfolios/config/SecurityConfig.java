@@ -16,10 +16,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/usuarios/registro").permitAll()
+                        .requestMatchers("/api/billetera/").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/ventas/**").permitAll()
-                        // Permite que el Motor de Emparejamiento interno llame a /resolver sin token
-                        .requestMatchers("/api/billetera/operacion/resolver").permitAll()
+                        .requestMatchers("/api/usuarios").permitAll()
+                        .requestMatchers("/api/ventas").permitAll()
                         // Cualquier otra petición (como ingresar dinero) exige token válido
                         .anyRequest().authenticated()
                 )

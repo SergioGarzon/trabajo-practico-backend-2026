@@ -37,8 +37,6 @@ public class OrdenController {
 
     @PostMapping("/compra")
     public ResponseEntity<?> crearOrdenCompra(@RequestBody NuevaOrdenCompraDTO dto, @AuthenticationPrincipal Jwt jwt) {
-
-        System.out.println("AaAAAAAAAAA");
         try {
             String userId = jwt.getSubject();
             String jwtToken = jwt.getTokenValue();
@@ -52,9 +50,6 @@ public class OrdenController {
                     jwtToken
             );
 
-            System.out.println(orden);
-
-            
             return ResponseEntity.ok("Orden de compra creada y procesada exitosamente");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("llegue aca");

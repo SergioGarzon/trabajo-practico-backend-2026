@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Iterator;
 
 @Service
-public class PortfolioService {
+public class PortfolioService implements IPortfolioService {
 
     @Autowired
     private PortfolioRepository repo;
