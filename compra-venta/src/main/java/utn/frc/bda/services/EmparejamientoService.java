@@ -95,6 +95,8 @@ public class EmparejamientoService {
 
                 // El monto total de la operación
                 Double montoTotal = precioAcordado * cantidadAIntercambiar;
+                
+                Double montoSobrante = (compra.getPrecio() - precioAcordado) * cantidadAIntercambiar;
 
                 log.info("[Matchmaking] Match encontrado! Compra#{} <-> Venta#{} | Símbolo: {} | Cantidad: {} | Precio: {}",
                         compra.getId(), venta.getId(), compra.getSimboloAccion(), cantidadAIntercambiar, precioAcordado);
@@ -102,7 +104,7 @@ public class EmparejamientoService {
                 // 4. Llamar a los clientes del microservicio de portfolios/billetera
                 boolean compraOk = portfolioClient.resolverOrdenCompra(
                         compra.getId(), cantidadAIntercambiar, montoTotal,
-                        compra.getUsuarioId(), compra.getSimboloAccion());
+                        compra.getUsuarioId(), compra.getSimboloAccion(), montoSobrante);
 
                 boolean ventaOk = portfolioClient.procesarVenta(
                         venta.getId(), montoTotal, cantidadAIntercambiar, venta.getUsuarioId());
