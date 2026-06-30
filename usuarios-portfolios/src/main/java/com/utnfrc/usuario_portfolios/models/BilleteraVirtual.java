@@ -34,7 +34,7 @@ public class BilleteraVirtual implements Serializable {
     private Usuarios usuario;     
 
 
-    public void retirarDinero(Long cant){
+    public void retirarDinero(Double cant){
         if (cant <= 0){
             throw new IllegalArgumentException("La cantidad a retirar debe ser mayor a 0");
         }
@@ -44,7 +44,7 @@ public class BilleteraVirtual implements Serializable {
         setDineroLibre(dineroLibre - cant);
     }
 
-    public void ingresarDinero(Long cant){
+    public void ingresarDinero(Double cant){
         if (cant <= 0){ throw new IllegalArgumentException("La cantidad a ingresar debe ser mayor a 0"); }
         setDineroLibre(dineroLibre + cant);
     }

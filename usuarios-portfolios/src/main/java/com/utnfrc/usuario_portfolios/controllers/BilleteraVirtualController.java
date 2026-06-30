@@ -52,7 +52,7 @@ public class BilleteraVirtualController {
     @PutMapping("/retirar")
     public ResponseEntity<BilleteraVirtual> retirarDinero(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody Long cantidadDinero) {
+            @RequestBody Double cantidadDinero) {
 
         String usuarioId = jwt.getSubject();
 
@@ -64,7 +64,7 @@ public class BilleteraVirtualController {
     @PutMapping("/ingresar")
     public ResponseEntity<BilleteraVirtual> ingresarDinero(
             @AuthenticationPrincipal Jwt jwt,
-            @RequestBody Long cantidadDinero)
+            @RequestBody Double cantidadDinero)
     {
         String userId = jwt.getSubject();
         BilleteraVirtual bvAct = billeteraVirtualService.ingresarDinero(userId, cantidadDinero);
@@ -80,6 +80,7 @@ public class BilleteraVirtualController {
         try{
             String userId = jwt.getSubject();
             billeteraVirtualService.solicitarYBloquearDinero(userId, dto.getMonto(), dto.getIdOrdenCompra());
+
             return ResponseEntity.ok(true);
 
         }catch(Exception e){

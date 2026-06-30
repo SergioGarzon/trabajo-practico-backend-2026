@@ -23,16 +23,18 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
     private final UsuariosRepositories usuariosRepositories;
     private final ReservaSaldoRepository reservaRepository;
     private final PortfolioService portfolioService;
+    private final RegistroOperacionService registroOperacionService;
 
     @Autowired
     private AccionService accionService;
 
-    public BilleteraVirtualService(UsuariosServices usuariosService, PortfolioService portfolioService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository) {
+    public BilleteraVirtualService(RegistroOperacionService registroOperacionService, UsuariosServices usuariosService, PortfolioService portfolioService, BilleteraVirtualRepository bvRepository, UsuariosRepositories usuariosRepositories, ReservaSaldoRepository reservaRepository) {
         this.usuariosRepositories = usuariosRepositories;
         this.usuariosService = usuariosService;
         this.bvRepository = bvRepository;
         this.reservaRepository = reservaRepository;
         this.portfolioService = portfolioService;
+        this.registroOperacionService = registroOperacionService;
     }
 
     @Transactional
@@ -71,22 +73,34 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
 
 
     @Transactional
-    public BilleteraVirtual retirarDinero(String idUsuario, Long cantidad) {
+    public BilleteraVirtual retirarDinero(String idUsuario, Double cantidad) {
 
         BilleteraVirtual bv = bvRepository.findByUsuario_Id(idUsuario)
                 .orElseThrow(() -> new BilleteraVituralException("La billetera no fue encontrada"));
 
         bv.retirarDinero(cantidad);
         bvRepository.save(bv);
+        registroOperacionService.registrar(
+                bv.getUsuario(),
+                TipoOperacion.RETIRO_DINERO,
+                "Carga de saldo mediante transferencia",
+                cantidad
+        );
         return bv;
     }
 
     @Transactional
-    public BilleteraVirtual ingresarDinero(String idUsuario, Long cantidad) {
+    public BilleteraVirtual ingresarDinero(String idUsuario, Double cantidad) {
         BilleteraVirtual bv = bvRepository.findByUsuario_Id(idUsuario)
                 .orElseThrow(() -> new BilleteraVituralException("La billetera no fue encontrada"));
         bv.ingresarDinero(cantidad);
         bvRepository.save(bv);
+        registroOperacionService.registrar(
+                bv.getUsuario(),
+                TipoOperacion.INGRESO_DINERO,
+                "Carga de saldo mediante transferencia",
+                cantidad
+        );
         return bv;
     }
 
@@ -109,6 +123,12 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
         reserva.setBilletera(bv);
 
         reservaRepository.save(reserva);
+        registroOperacionService.registrar(
+                bv.getUsuario(),
+                TipoOperacion.BLOQUEAR_DINERO,
+                "Carga de saldo mediante transferencia",
+                reserva.getMonto()
+        );
 
         return reserva.getId();
     }
@@ -143,6 +163,14 @@ public class BilleteraVirtualService implements IBilleteraVirtualService {
         }
 
         reservaRepository.save(reserva);
+        registroOperacionService.registrar(
+                bv.getUsuario(),
+                TipoOperacion.COMPRA_ACCION,
+                "Compro acciones",
+                reserva.getMonto()
+
+        );
+
         return bvRepository.save(bv);
     }
 
