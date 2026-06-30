@@ -1,4 +1,4 @@
-package utn.frc.edu.backend;
+package utn.frc.edu.backend.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

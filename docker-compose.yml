@@ -1,0 +1,174 @@
+version: '3.8'
+
+services:
+  # --- 1. KEYCLOAK (En puerto 8180 y conectado a MySQL) ---
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.0
+    container_name: tp-keycloak-auth
+    # Mantenemos el comando del nuevo archivo para forzar el puerto 8180
+    command: start-dev --http-port=8180
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      # Persistencia en base de datos que armamos anteriormente
+      - KC_DB=mysql
+      - KC_DB_URL=jdbc:mysql://mysql-db:3306/keycloak_db?createDatabaseIfNotExist=true
+      - KC_DB_USERNAME=root
+      - KC_DB_PASSWORD=root
+    ports:
+      - "8180:8180"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    depends_on:
+      - mysql-db
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+  # --- 2. BASE DE DATOS UNIFICADA ---
+  mysql-db:
+    image: mysql:8.0
+    container_name: contenedor-mysql2
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Script para que cree 'keycloak_db' automáticamente al iniciar-
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:Z
+    networks:
+      - tp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # --- 3. TU BACKEND DE JAVA ---
+  usuarios-portfolios-service:
+    build:
+      context: ./usuarios-portfolios
+      dockerfile: Dockerfile
+    container_name: tp-usuarios-portfolios
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8081
+      - MYSQL_HOST=mysql-db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+  #  --- 4. MÉTRICAS: PROMETHEUS ---
+  prometheus:
+    image: prom/prometheus:v2.35.0
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - tp-network
+
+  # --- 5. MÉTRICAS: GRAFANA ---
+  grafana:
+    image: grafana/grafana:10.4.1
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - tp-network
+
+  # --- 6. TU BACKEND DE COMPRA-VENTA ---
+  compra-venta-service:
+    build:
+      context: ./compra-venta
+      dockerfile: Dockerfile
+    container_name: tp-compra-venta
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8089
+      - MYSQL_HOST=mysql-db
+      - MYSQL_DATABASE=compras_ventas_db
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+  servicio-yahoo-api-finance:
+    build:
+      context: ./servicio-yahoo-api-finance
+      dockerfile: Dockerfile
+    container_name: servicio-yahoo-api-finance
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_PORT=8084
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: tp-api-gateway
+    ports:
+      - "8083:8083" # Exponemos el puerto del Gateway al exterior (ej: 8080 o el que prefieran usar)
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # LE PASAMOS LAS RUTAS CORRECTAS DE DOCKER PARA DETENER EL BUCLE INFINITO:
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://keycloak:8180/realms/users-tp
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI=http://keycloak:8180/realms/users-tp/protocol/openid-connect/certs
+    
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - tp-network
+    restart: unless-stopped
+
+volumes:
+  keycloak_data:
+    driver: local
+  mysql_data:
+    driver: local
+
+networks:
+  tp-network:
+    driver: bridge
