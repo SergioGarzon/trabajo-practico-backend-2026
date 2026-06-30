@@ -20,6 +20,8 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/usuarios").permitAll()
                         .requestMatchers("/api/ventas").permitAll()
+                        .requestMatchers("/api/billetera/operacion/resolver").permitAll()
+                        .requestMatchers("/api/ventas/procesar").permitAll()
                         // Cualquier otra petición (como ingresar dinero) exige token válido
                         .anyRequest().authenticated()
                 )
